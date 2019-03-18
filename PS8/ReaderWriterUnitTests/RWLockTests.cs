@@ -14,7 +14,7 @@ namespace ReaderWriterUnitTests
     {
         /// <summary>
         /// Verifies that an attempt to exit a write lock without having previously acquired a write
-        /// lock results in a SynchronizationLockException.
+        /// lock results in a SynchronizationLockException. 
         /// </summary>
         [TestMethod, Timeout(500)]
         [ExpectedException(typeof(SynchronizationLockException))]
