@@ -284,7 +284,7 @@ namespace ReaderWriterUnitTests
         }
 
 
-        [TestMethod]
+        [TestMethod, Timeout(500)]
         [ExpectedException(typeof(LockRecursionException))]
         public void TestMultipleEnterReadLock()
         {
@@ -294,7 +294,7 @@ namespace ReaderWriterUnitTests
         }
 
 
-        [TestMethod]
+        [TestMethod, Timeout(500)]
         [ExpectedException(typeof(LockRecursionException))]
         public void TestMultipleEnterWriteLock()
         {
@@ -303,7 +303,7 @@ namespace ReaderWriterUnitTests
             rw.EnterWriteLock();
         }
 
-        [TestMethod]
+        [TestMethod, Timeout(500)]
         [ExpectedException(typeof(SynchronizationLockException))]
         public void TestExitReadWithoutEnter()
         {
@@ -312,7 +312,7 @@ namespace ReaderWriterUnitTests
         }
 
 
-        [TestMethod]
+        [TestMethod, Timeout(500)]
         [ExpectedException(typeof(ArgumentOutOfRangeException))]
         public void TestTryEnterReadLockNegativeInput()
         {
@@ -325,7 +325,7 @@ namespace ReaderWriterUnitTests
             rwLock.ExitReadLock();
         }
 
-        [TestMethod]
+        [TestMethod, Timeout(500)]
         [ExpectedException(typeof(LockRecursionException))]
         public void TestTryEnterReadLockLockRecursion()
         {
@@ -340,33 +340,124 @@ namespace ReaderWriterUnitTests
         }
 
 
+        [TestMethod, Timeout(500)]
+        [ExpectedException(typeof(ObjectDisposedException))]
+        public void TestTryEnterReadLockObjectDisposed()
+        {
+            RWLock rwLock = RWLockBuilder.NewLock();
+
+            rwLock.Dispose();
+            rwLock.TryEnterReadLock(10);
+
+        }
+
+        [TestMethod, Timeout(500)]
+        public void TestTryEnterReadLock()
+        {
+            // These local variables are used by the GetReadLock method below.  They are accessible
+            // to that method because it is nested within TestMethod2.
+            int count = 2;
+            ManualResetEvent mre = new ManualResetEvent(false);
+            RWLock rwLock = RWLockBuilder.NewLock();
+
+            // Run GetReadLock() on two tasks.  Wait up to one second for count to be decremented to zero.
+            Task t1 = Task.Run(() => GetReadLock());
+            Task t2 = Task.Run(() => GetReadLock());
+            Assert.IsTrue(SpinWait.SpinUntil(() => count == 0, 1000), "Unable to have two simultaneous readers");
+
+            // Allow the blocked tasks to resume, which will result in their termination
+            mre.Set();
+
+            // This method is run simultaneously in two tasks
+            void GetReadLock()
+            {
+                // Acquire a read lock
+                rwLock.TryEnterReadLock(10);
+
+                // Atomically decrement the shared count variable.  Note that merely doing count-- won't always work.
+                Interlocked.Decrement(ref count);
+
+                // Block until the main task sets the mre to true.
+                mre.WaitOne();
+
+                // Exit the read lock
+                rwLock.ExitReadLock();
+            }
+        }
 
 
+        [TestMethod, Timeout(500)]
+        [ExpectedException(typeof(ArgumentOutOfRangeException))]
+        public void TestTryEnterWriteLockNegativeInput()
+        {
+            // These local variables are used by the GetReadLock method below.  They are accessible
+            // to that method because it is nested within TestMethod2.
+            ManualResetEvent mre = new ManualResetEvent(false);
+            RWLock rwLock = RWLockBuilder.NewLock();
+
+            rwLock.TryEnterWriteLock(-120000);
+            rwLock.ExitReadLock();
+        }
+
+        [TestMethod, Timeout(500)]
+        [ExpectedException(typeof(LockRecursionException))]
+        public void TestTryEnterWriteLockLockRecursion()
+        {
+            // These local variables are used by the GetReadLock method below.  They are accessible
+            // to that method because it is nested within TestMethod2.
+            ManualResetEvent mre = new ManualResetEvent(false);
+            RWLock rwLock = RWLockBuilder.NewLock();
+
+            rwLock.TryEnterWriteLock(10);
+            rwLock.TryEnterWriteLock(50);
+            rwLock.ExitReadLock();
+        }
 
 
+        [TestMethod, Timeout(500)]
+        [ExpectedException(typeof(ObjectDisposedException))]
+        public void TestTryEnterWriteLockObjectDisposed()
+        {
+            RWLock rwLock = RWLockBuilder.NewLock();
 
+            rwLock.Dispose();
+            rwLock.TryEnterWriteLock(10);
 
+        }
 
+        [TestMethod, Timeout(500)]
+        public void TestTryEnterWriteLock()
+        {
+            // These local variables are used by the GetReadLock method below.  They are accessible
+            // to that method because it is nested within TestMethod2.
+            int count = 2;
+            ManualResetEvent mre = new ManualResetEvent(false);
+            RWLock rwLock = RWLockBuilder.NewLock();
 
+            // Run GetWriteLock() on two tasks.  Wait up to one second for count to be decremented to zero.
+            Task t1 = Task.Run(() => GetWriteLock());
+            Task t2 = Task.Run(() => GetWriteLock());
+            Assert.IsTrue(SpinWait.SpinUntil(() => count == 0, 1000), "Unable to have two simultaneous readers");
 
+            // Allow the blocked tasks to resume, which will result in their termination
+            mre.Set();
 
+            // This method is run simultaneously in two tasks
+            void GetWriteLock()
+            {
+                // Acquire a write lock
+                rwLock.TryEnterWriteLock(10);
 
+                // Atomically decrement the shared count variable.  Note that merely doing count-- won't always work.
+                Interlocked.Decrement(ref count);
 
+                // Block until the main task sets the mre to true.
+                mre.WaitOne();
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+                // Exit the read lock
+                rwLock.ExitWriteLock();
+            }
+        }
 
 
 
