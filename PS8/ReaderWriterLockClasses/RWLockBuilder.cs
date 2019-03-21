@@ -18,6 +18,7 @@ namespace ReaderWriterLockClasses
         /// if there is no LockType setting or if it does not name a valid class.
         /// </summary>
         public static RWLock NewLock()
+
         {
             // Create an object to wrap by using the zero-parameter constructor via reflection
             String lockType = Properties.Settings.Default.LockType;
