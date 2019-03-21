@@ -31,7 +31,7 @@ namespace ReaderWriterUnitTests
         /// <summary>
         /// Verifies that two tasks can simultaneously acquire the same read lock.
         /// </summary>
-        [TestMethod, Timeout(1500)]
+        [TestMethod, Timeout(500)]
         public void TestObtainSimultaneousReadLock()
         {
             // These local variables are used by the GetReadLock method below.  They are accessible
@@ -69,7 +69,7 @@ namespace ReaderWriterUnitTests
         /// Ensures that the IsReadLockHeld instance variable is updating correctly and performing as specified.
         /// </summary>
         [TestMethod]
-        public void TestMethod3()
+        public void TestIsReadLockHeldMultiThread()
         {
             // These local variables are used by the GetReadLock method below.  They are accessible
             // to that method because it is nested within TestMethod2.
@@ -83,7 +83,7 @@ namespace ReaderWriterUnitTests
             // Run GetReadLock() on two tasks.  Wait up to one second for count to be decremented to zero.
             Task t1 = Task.Run(() => GetReadLock());
             Task t2 = Task.Run(() => GetReadLock());
-            Assert.IsTrue(SpinWait.SpinUntil(() => count == 0, 500000), "Unable to have two simultaneous readers");
+            Assert.IsTrue(SpinWait.SpinUntil(() => count == 0, 1000), "Unable to have two simultaneous readers");
 
             Assert.AreEqual(2, EnterReadLockCount);
             Assert.AreEqual(2, ExitReadLockCount);
@@ -124,7 +124,7 @@ namespace ReaderWriterUnitTests
         /// lock in read mode.
         /// </summary>
         [TestMethod, Timeout(200)]
-        public void TestMethod4()
+        public void TestCurrentReadCountThreeThreads()
         {
             // These local variables are used by the GetReadLock method below.  They are accessible
             // to that method because it is nested within TestMethod2.
@@ -166,8 +166,8 @@ namespace ReaderWriterUnitTests
         /// Uses the GetReadCount method to check if there are actually 2 threads that have entered
         /// the lock in read mode.
         /// </summary>
-        [TestMethod, Timeout(400)]
-        public void TestMethod5()
+        [TestMethod, Timeout(500)]
+        public void TestCurrentReadCount()
         {
             // These local variables are used by the GetReadLock method below.  They are accessible
             // to that method because it is nested within TestMethod2.
@@ -208,7 +208,7 @@ namespace ReaderWriterUnitTests
         /// Ensures that the IsWriteLockHeld instance variable is performing as expected.
         /// </summary>
         [TestMethod, Timeout(200)]
-        public void TestMethod6()
+        public void TestIsWriteLockHeldMultiThread()
         {
             // These local variables are used by the GetReadLock method below.  They are accessible
             // to that method because it is nested within TestMethod2.
@@ -263,9 +263,39 @@ namespace ReaderWriterUnitTests
         {
             // These local variables are used by the GetReadLock method below.  They are accessible
             // to that method because it is nested within TestMethod2.
+            int WaitingForLock = 0;
+            int NoLongerWaiting = 2;
             ManualResetEvent mre = new ManualResetEvent(false);
             RWLock rwLock = RWLockBuilder.NewLock();
-            // TODO: Write a test that ensures the the WaitingWriteCount instance variable is updating correctly.
+            
+            Task t1 = Task.Run(() => GetWriteLock());
+
+
+            Assert.IsTrue(SpinWait.SpinUntil(() => WaitingForLock == 2 && NoLongerWaiting == 0, 1000), " ");
+
+            mre.Set();
+            void GetWriteLock()
+            {
+                rwLock.EnterWriteLock();
+                Task t2 = Task.Run(() => WaitForWriteLock());
+                Task t3 = Task.Run(() => WaitForWriteLock());
+                if (SpinWait.SpinUntil(() => rwLock.WaitingWriteCount == 2, 500))
+                {
+                    WaitingForLock = rwLock.WaitingWriteCount;
+                }
+                rwLock.ExitWriteLock();
+                if (SpinWait.SpinUntil(() => rwLock.WaitingWriteCount == 0, 500))
+                {
+                    NoLongerWaiting = 0;
+                }
+                mre.WaitOne();
+            }
+
+            void WaitForWriteLock()
+            {
+                rwLock.EnterWriteLock();
+                rwLock.ExitWriteLock();
+            }
         }
 
 
@@ -273,14 +303,44 @@ namespace ReaderWriterUnitTests
         /// Ensures that the WaitingReadCount instance variable is updating as expected. Runs twenty
         /// times to ensure that no odd multithreading stuff is making the test pass.
         /// </summary>
-        [TestMethod, Timeout(500)]
+        [TestMethod]
         public void TestWaitingReadCountWorks()
         {
             // These local variables are used by the GeReadLock method below.  They are accessible
             // to that method because it is nested within this test case.
+
+            int WaitingForLock = 0;
+            int NoLongerWaiting = 2;
             ManualResetEvent mre = new ManualResetEvent(false);
             RWLock rwLock = RWLockBuilder.NewLock();
-            // TODO: Write a test that ensures that the WaitingReadCount instance variable is updating correctly.
+            Task t1 = Task.Run(() => GetReadLock());
+            
+            
+            Assert.IsTrue(SpinWait.SpinUntil(() => WaitingForLock == 2 && NoLongerWaiting == 0, 1000), " ");
+            mre.Set();
+            void GetReadLock()
+            {
+                rwLock.EnterWriteLock();
+                Task t2 = Task.Run(() => WaitForReadLock());
+                Task t3 = Task.Run(() => WaitForReadLock());
+                if (SpinWait.SpinUntil(() => rwLock.WaitingReadCount == 2, 500))
+                {
+                    WaitingForLock = 2;
+                }
+                rwLock.ExitWriteLock();
+                if (SpinWait.SpinUntil(() => rwLock.WaitingReadCount == 0, 500))
+                {
+                    NoLongerWaiting = 0;
+                }
+                mre.WaitOne();
+            }
+
+            void WaitForReadLock()
+            {
+                rwLock.EnterReadLock();
+                rwLock.ExitReadLock();
+            }
+
         }
 
 
@@ -459,13 +519,101 @@ namespace ReaderWriterUnitTests
             }
         }
 
+        [TestMethod, Timeout(500)]
+        public void TestIsReadLockHeldFalse()
+        {
+            RWLock rw = RWLockBuilder.NewLock();
+            Assert.IsFalse(rw.IsReadLockHeld);
+        }
 
+        [TestMethod, Timeout(500)]
+        public void TestIsWriteLockHeldFalse()
+        {
+            RWLock rw = RWLockBuilder.NewLock();
+            Assert.IsFalse(rw.IsWriteLockHeld);
+        }
 
+        [TestMethod, Timeout(500)]
+        public void TestIsReadLockHeldTrue()
+        {
+            RWLock rw = RWLockBuilder.NewLock();
+            rw.EnterReadLock();
+            Assert.IsTrue(rw.IsReadLockHeld);
+            rw.ExitReadLock();
+            Assert.IsFalse(rw.IsReadLockHeld);
+        }
 
+        [TestMethod, Timeout(500)]
+        public void TestIsWriteLockHeldTrue()
+        {
+            RWLock rw = RWLockBuilder.NewLock();
+            rw.EnterWriteLock();
+            Assert.IsTrue(rw.IsWriteLockHeld);
+            rw.ExitWriteLock();
+            Assert.IsFalse(rw.IsWriteLockHeld);
+        }
 
+        [TestMethod, Timeout(500)]
+        public void TestTryEnterWriteLockTrue()
+        {
+            RWLock rw = RWLockBuilder.NewLock();
+            Assert.IsTrue(rw.TryEnterWriteLock(0));
+        }
 
+        [TestMethod, Timeout(500)]
+        public void TestTryEnterWriteLockFalse()
+        {
+            bool InWriteLock = false;
+            ManualResetEvent mre = new ManualResetEvent(false);
+            RWLock rw = RWLockBuilder.NewLock();
+            Task t1 = Task.Run(() => TryEnterWriteLockNotAllowed());
+            SpinWait.SpinUntil(() => InWriteLock, 100);
+            Assert.IsFalse(rw.TryEnterWriteLock(0));
 
+            mre.Set();
 
+            void TryEnterWriteLockNotAllowed()
+            {
+                rw.EnterWriteLock();
+
+                InWriteLock = true;
+
+                mre.WaitOne();
+
+                rw.ExitWriteLock();
+            }
+        }
+
+        [TestMethod, Timeout(500)]
+        public void TestTryEnterReadLockTrue()
+        {
+            RWLock rw = RWLockBuilder.NewLock();
+            Assert.IsTrue(rw.TryEnterReadLock(0));
+        }
+
+        [TestMethod]
+        public void TestTryEnterReadLockFalse()
+        {
+            bool InWriteLock = false;
+            ManualResetEvent mre = new ManualResetEvent(false);
+            RWLock rw = RWLockBuilder.NewLock();
+            Task t1 = Task.Run(() => TryEnterWriteLockNotAllowed());
+            SpinWait.SpinUntil(() => InWriteLock, 100);
+            Assert.IsFalse(rw.TryEnterReadLock(0));
+
+            mre.Set();
+
+            void TryEnterWriteLockNotAllowed()
+            {
+                rw.EnterWriteLock();
+
+                InWriteLock = true;
+
+                mre.WaitOne();
+
+                rw.ExitWriteLock();
+            }
+        }
 
     }
 }
