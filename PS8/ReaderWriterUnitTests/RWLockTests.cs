@@ -313,12 +313,12 @@ namespace ReaderWriterUnitTests
             int NoLongerWaiting = 2;
             ManualResetEvent mre = new ManualResetEvent(false);
             RWLock rwLock = RWLockBuilder.NewLock();
-            Task t1 = Task.Run(() => GetReadLock());
+            Task t1 = Task.Run(() => GetWriteLock());
             
             
             Assert.IsTrue(SpinWait.SpinUntil(() => WaitingForLock == 2 && NoLongerWaiting == 0, 1000), " ");
             mre.Set();
-            void GetReadLock()
+            void GetWriteLock()
             {
                 rwLock.EnterWriteLock();
                 Task t2 = Task.Run(() => WaitForReadLock());
@@ -591,7 +591,7 @@ namespace ReaderWriterUnitTests
             Assert.IsTrue(rw.TryEnterReadLock(0));
         }
 
-        [TestMethod]
+        [TestMethod, Timeout(500)]
         public void TestTryEnterReadLockFalse()
         {
             bool InWriteLock = false;
@@ -614,6 +614,25 @@ namespace ReaderWriterUnitTests
                 rw.ExitWriteLock();
             }
         }
+
+        [TestMethod, Timeout(500)]
+        public void StressTest1()
+        {
+            for(int i = 0; i < 100; i++)
+            {
+                TestWaitingReadCountWorks();
+            }
+        }
+
+        [TestMethod, Timeout(500)]
+        public void StressTest2()
+        {
+            for (int i = 0; i < 100; i++)
+            {
+                TestWaitingWriteCountWorks();
+            }
+        }
+
 
     }
 }
