@@ -3,6 +3,7 @@
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using ReaderWriterLockClasses;
+using System;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -69,7 +70,7 @@ namespace ReaderWriterUnitTests
         /// 
         /// TESTS isReadlockHeld method to check if method actually works
         /// </summary>
-        [TestMethod, Timeout(500)]
+        [TestMethod]
         public void TestMethod3()
         {
             // These local variables are used by the GetReadLock method below.  They are accessible
@@ -101,7 +102,7 @@ namespace ReaderWriterUnitTests
 
                 if (rwLock.IsReadLockHeld)      //Check if read lock is currently on
                 {
-                    Interlocked.Increment(ref EnterReadLockCount);
+                    Interlocked.Increment(ref EnterReadLockCount);      //Atomically increments the shared counter that keeps track of the amount of times there was a read lock\
                 }
                 // Atomically decrement the shared count variable.  Note that merely doing count-- won't always work.
                 Interlocked.Decrement(ref count);
@@ -115,7 +116,7 @@ namespace ReaderWriterUnitTests
 
                 if (!rwLock.IsReadLockHeld)     //check if read lock is currently off
                 {
-                    Interlocked.Increment(ref ExitReadLockCount);
+                    Interlocked.Increment(ref ExitReadLockCount);   //Atomically increments the shared counter that keeps track of the amount of times there was a read lock
                 }
             }
         }
@@ -217,6 +218,9 @@ namespace ReaderWriterUnitTests
             // These local variables are used by the GetReadLock method below.  They are accessible
             // to that method because it is nested within TestMethod2.
             int count = 2;
+
+            int EnterWriteLockCount = 0;
+            int ExitWriteLockCount = 0;
             ManualResetEvent mre = new ManualResetEvent(false);
             RWLock rwLock = RWLockBuilder.NewLock();
 
@@ -225,20 +229,31 @@ namespace ReaderWriterUnitTests
             Task t2 = Task.Run(() => GetWriteLock());
             Assert.IsTrue(SpinWait.SpinUntil(() => count == 0, 1000), "Unable to have two simultaneous writers");
 
+
+            Assert.AreEqual(2, EnterWriteLockCount);
+            Assert.AreEqual(2, ExitWriteLockCount);
+
             // Allow the blocked tasks to resume, which will result in their termination
             mre.Set();
 
             void GetWriteLock()
             {
                 rwLock.EnterWriteLock();
-                Assert.IsTrue(rwLock.IsWriteLockHeld);
+
+                if (rwLock.IsWriteLockHeld)
+                {
+                    Interlocked.Increment(ref EnterWriteLockCount);
+                }
 
                 Interlocked.Decrement(ref count);
 
                 rwLock.ExitWriteLock();
                 mre.WaitOne();
 
-                Assert.IsFalse(rwLock.IsWriteLockHeld);
+                if (!rwLock.IsWriteLockHeld)     //check if read lock is currently off
+                {
+                    Interlocked.Increment(ref ExitWriteLockCount);   //Atomically increments the shared counter that keeps track of the amount of times there was a read lock
+                }
             }
         }
 
@@ -361,9 +376,32 @@ namespace ReaderWriterUnitTests
         }
 
 
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentOutOfRangeException))]
+        public void TestTryEnterReadLockNegativeInput()
+        {
+            // These local variables are used by the GetReadLock method below.  They are accessible
+            // to that method because it is nested within TestMethod2.
+            ManualResetEvent mre = new ManualResetEvent(false);
+            RWLock rwLock = RWLockBuilder.NewLock();
 
+            rwLock.TryEnterReadLock(-120000);
+            rwLock.ExitReadLock();
+        }
 
+        [TestMethod]
+        [ExpectedException(typeof(LockRecursionException))]
+        public void TestTryEnterReadLockLockRecursion()
+        {
+            // These local variables are used by the GetReadLock method below.  They are accessible
+            // to that method because it is nested within TestMethod2.
+            ManualResetEvent mre = new ManualResetEvent(false);
+            RWLock rwLock = RWLockBuilder.NewLock();
 
+            rwLock.TryEnterReadLock(10);
+            rwLock.TryEnterReadLock(50);
+            rwLock.ExitReadLock();
+        }
 
 
 
