@@ -18,7 +18,7 @@ namespace ReaderWriterUnitTests
         /// </summary>
         [TestMethod, Timeout(500)]
         [ExpectedException(typeof(SynchronizationLockException))]
-        public void TestMethod1()
+        public void TestExitWriteLockWithoutEnter()
         {
             // This is how you should create a lock in all of your test cases.
             // Do not create locks any other way or your code will be ungradeable.
@@ -32,7 +32,7 @@ namespace ReaderWriterUnitTests
         /// Verifies that two tasks can simultaneously acquire the same read lock.
         /// </summary>
         [TestMethod, Timeout(1500)]
-        public void TestMethod2()
+        public void TestObtainSimultaneousReadLock()
         {
             // These local variables are used by the GetReadLock method below.  They are accessible
             // to that method because it is nested within TestMethod2.
@@ -66,9 +66,7 @@ namespace ReaderWriterUnitTests
         }
 
         /// <summary>
-        /// Verifies that two tasks can simultaneously acquire the same read lock... 
-        /// 
-        /// TESTS isReadlockHeld method to check if method actually works
+        /// Ensures that the IsReadLockHeld instance variable is updating correctly and performing as specified.
         /// </summary>
         [TestMethod]
         public void TestMethod3()
@@ -85,7 +83,7 @@ namespace ReaderWriterUnitTests
             // Run GetReadLock() on two tasks.  Wait up to one second for count to be decremented to zero.
             Task t1 = Task.Run(() => GetReadLock());
             Task t2 = Task.Run(() => GetReadLock());
-            Assert.IsTrue(SpinWait.SpinUntil(() => count == 0, 1000), "Unable to have two simultaneous readers");
+            Assert.IsTrue(SpinWait.SpinUntil(() => count == 0, 500000), "Unable to have two simultaneous readers");
 
             Assert.AreEqual(2, EnterReadLockCount);
             Assert.AreEqual(2, ExitReadLockCount);
@@ -106,10 +104,9 @@ namespace ReaderWriterUnitTests
                 }
                 // Atomically decrement the shared count variable.  Note that merely doing count-- won't always work.
                 Interlocked.Decrement(ref count);
-               
+
 
                 // Block until the main task sets the mre to true.
-                mre.WaitOne();
 
                 // Exit the read lock
                 rwLock.ExitReadLock();
@@ -118,13 +115,13 @@ namespace ReaderWriterUnitTests
                 {
                     Interlocked.Increment(ref ExitReadLockCount);   //Atomically increments the shared counter that keeps track of the amount of times there was a read lock
                 }
+                mre.WaitOne();
             }
         }
 
         /// <summary>
-        /// Verifies that two tasks can simultaneously acquire the same read lock... 
-        /// 
-        /// TESTS GetReadCount method to check if there are actually 3 threads that have entered the lock in read mode
+        /// Uses GetReadCount method to check if there are actually 3 threads that have entered the
+        /// lock in read mode.
         /// </summary>
         [TestMethod, Timeout(200)]
         public void TestMethod4()
@@ -135,11 +132,11 @@ namespace ReaderWriterUnitTests
             ManualResetEvent mre = new ManualResetEvent(false);
             RWLock rwLock = RWLockBuilder.NewLock();
 
-            // Run GetReadLock() on two tasks.  Wait up to one second for count to be decremented to zero.
+            // Run GetReadLock() on three tasks.  Wait up to one second for count to be decremented to zero.
             Task t1 = Task.Run(() => GetReadLock());
             Task t2 = Task.Run(() => GetReadLock());
             Task t3 = Task.Run(() => GetReadLock());
-            Assert.IsTrue(SpinWait.SpinUntil(() => count == 0, 1000), "Unable to have two simultaneous readers");
+            Assert.IsTrue(SpinWait.SpinUntil(() => count == 0, 1000), "Unable to have three simultaneous readers");
 
             Assert.AreEqual(3, rwLock.CurrentReadCount);
 
@@ -166,11 +163,10 @@ namespace ReaderWriterUnitTests
         }
 
         /// <summary>
-        /// Verifies that two tasks can simultaneously acquire the same read lock... 
-        /// 
-        /// TESTS GetReadCount method to check if there are actually 2 threads that have entered the lock in read mode
+        /// Uses the GetReadCount method to check if there are actually 2 threads that have entered
+        /// the lock in read mode.
         /// </summary>
-        [TestMethod, Timeout(200)]
+        [TestMethod, Timeout(400)]
         public void TestMethod5()
         {
             // These local variables are used by the GetReadLock method below.  They are accessible
@@ -184,6 +180,7 @@ namespace ReaderWriterUnitTests
             Task t2 = Task.Run(() => GetReadLock());
             Assert.IsTrue(SpinWait.SpinUntil(() => count == 0, 1000), "Unable to have two simultaneous readers");
 
+            // Assert that two unique threads entered the read lock.
             Assert.AreEqual(2, rwLock.CurrentReadCount);
 
             // Allow the blocked tasks to resume, which will result in their termination
@@ -208,9 +205,7 @@ namespace ReaderWriterUnitTests
 
 
         /// <summary>
-        /// Verifies that two tasks can simultaneously acquire the same read lock... 
-        /// 
-        /// TESTS WaitingWriteCount
+        /// Ensures that the IsWriteLockHeld instance variable is performing as expected.
         /// </summary>
         [TestMethod, Timeout(200)]
         public void TestMethod6()
@@ -224,7 +219,7 @@ namespace ReaderWriterUnitTests
             ManualResetEvent mre = new ManualResetEvent(false);
             RWLock rwLock = RWLockBuilder.NewLock();
 
-            // Run GetReadLock() on two tasks.  Wait up to one second for count to be decremented to zero.
+            // Run GetWriteLock() on two tasks.  Wait up to one second for count to be decremented to zero.
             Task t1 = Task.Run(() => GetWriteLock());
             Task t2 = Task.Run(() => GetWriteLock());
             Assert.IsTrue(SpinWait.SpinUntil(() => count == 0, 1000), "Unable to have two simultaneous writers");
@@ -240,6 +235,7 @@ namespace ReaderWriterUnitTests
             {
                 rwLock.EnterWriteLock();
 
+                // Increment the EnterWriteLockCount Variable if the WriteLock is held.
                 if (rwLock.IsWriteLockHeld)
                 {
                     Interlocked.Increment(ref EnterWriteLockCount);
@@ -248,12 +244,12 @@ namespace ReaderWriterUnitTests
                 Interlocked.Decrement(ref count);
 
                 rwLock.ExitWriteLock();
-                mre.WaitOne();
 
                 if (!rwLock.IsWriteLockHeld)     //check if read lock is currently off
                 {
                     Interlocked.Increment(ref ExitWriteLockCount);   //Atomically increments the shared counter that keeps track of the amount of times there was a read lock
                 }
+                mre.WaitOne();
             }
         }
 
@@ -262,95 +258,35 @@ namespace ReaderWriterUnitTests
         /// 
         /// TESTS WaitingWriteCount
         /// </summary>
-        [TestMethod]
+        [TestMethod, Timeout(500)]
         public void TestWaitingWriteCountWorks()
         {
             // These local variables are used by the GetReadLock method below.  They are accessible
             // to that method because it is nested within TestMethod2.
             ManualResetEvent mre = new ManualResetEvent(false);
             RWLock rwLock = RWLockBuilder.NewLock();
-
-            // Run GetWriteLock() on two tasks. 
-            Task t1 = Task.Run(() => GetWriteLock());
-            Task t2 = Task.Run(() => WaitForWriteLock());
-            Thread.Sleep(10);
-
-
-            // Allow the blocked tasks to resume, which will result in their termination
-            mre.Set();
-
-            void GetWriteLock()
-            {
-                rwLock.EnterWriteLock();
-                Assert.IsTrue(rwLock.IsWriteLockHeld);
-
-                // Wait until another thread tries to enter the lock, or 1 second. 
-                Assert.IsTrue(SpinWait.SpinUntil(() => rwLock.WaitingWriteCount == 1, 1000), "No thread is trying to enter write mode.");
-
-                rwLock.ExitWriteLock();
-                mre.WaitOne();
-
-                Assert.IsFalse(rwLock.IsWriteLockHeld);
-            }
-
-            void WaitForWriteLock()
-            {
-                Thread.Sleep(10);
-                rwLock.EnterWriteLock();
-                rwLock.ExitWriteLock();
-                mre.WaitOne();
-            }
+            // TODO: Write a test that ensures the the WaitingWriteCount instance variable is updating correctly.
         }
 
 
         /// <summary>
-        /// Verifies that two tasks can simultaneously acquire the same read lock... 
-        /// 
-        /// TESTS WaitingReadCount
+        /// Ensures that the WaitingReadCount instance variable is updating as expected. Runs twenty
+        /// times to ensure that no odd multithreading stuff is making the test pass.
         /// </summary>
-        [TestMethod]
+        [TestMethod, Timeout(500)]
         public void TestWaitingReadCountWorks()
         {
-            // These local variables are used by the GetReadLock method below.  They are accessible
-            // to that method because it is nested within TestMethod2.
+            // These local variables are used by the GeReadLock method below.  They are accessible
+            // to that method because it is nested within this test case.
             ManualResetEvent mre = new ManualResetEvent(false);
             RWLock rwLock = RWLockBuilder.NewLock();
-
-            // Run GetWriteLock() on two tasks. 
-            Task t1 = Task.Run(() => GetReadLock());
-            Task t2 = Task.Run(() => WaitForReadLock());
-
-            Thread.Sleep(10);
-
-
-            // Allow the blocked tasks to resume, which will result in their termination
-            mre.Set();
-
-            void GetReadLock()
-            {
-                rwLock.EnterReadLock();
-
-                // Wait until another thread tries to enter the lock, or 1 second. 
-                Assert.IsTrue(SpinWait.SpinUntil(() => rwLock.WaitingReadCount == 1, 1000), "No thread is trying to enter write mode.");
-
-                rwLock.ExitReadLock();
-                mre.WaitOne();
-
-            }
-
-            void WaitForReadLock()
-            {
-                Thread.Sleep(10);
-                rwLock.EnterReadLock();
-                rwLock.ExitReadLock();
-                mre.WaitOne();
-            }
+            // TODO: Write a test that ensures that the WaitingReadCount instance variable is updating correctly.
         }
 
 
         [TestMethod]
         [ExpectedException(typeof(LockRecursionException))]
-        public void TestMultipleEnterRead()
+        public void TestMultipleEnterReadLock()
         {
             RWLock rw = RWLockBuilder.NewLock();
             rw.EnterReadLock();
@@ -360,7 +296,7 @@ namespace ReaderWriterUnitTests
 
         [TestMethod]
         [ExpectedException(typeof(LockRecursionException))]
-        public void TestMultipleEnterWrite()
+        public void TestMultipleEnterWriteLock()
         {
             RWLock rw = RWLockBuilder.NewLock();
             rw.EnterWriteLock();
