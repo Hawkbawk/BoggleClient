@@ -21,5 +21,10 @@ namespace PS9
         {
 
         }
+
+        private void label6_Click(object sender, EventArgs e)
+        {
+
+        }
     }
 }
