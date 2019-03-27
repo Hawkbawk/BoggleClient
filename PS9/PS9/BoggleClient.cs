@@ -10,11 +10,16 @@ using System.Windows.Forms;
 
 namespace PS9
 {
-    public partial class Form1 : Form
+    public partial class BoggleClient : Form
     {
-        public Form1()
+        public BoggleClient()
         {
             InitializeComponent();
+        }
+
+        private void label1_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }
