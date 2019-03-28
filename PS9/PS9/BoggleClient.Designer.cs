@@ -54,22 +54,22 @@
             this.label14 = new System.Windows.Forms.Label();
             this.Enter_Game_Button = new System.Windows.Forms.Button();
             this.Cancel_Game_Button = new System.Windows.Forms.Button();
-            this.richTextBox5 = new System.Windows.Forms.RichTextBox();
-            this.richTextBox4 = new System.Windows.Forms.RichTextBox();
-            this.richTextBox2 = new System.Windows.Forms.RichTextBox();
-            this.richTextBox3 = new System.Windows.Forms.RichTextBox();
-            this.richTextBox6 = new System.Windows.Forms.RichTextBox();
-            this.richTextBox8 = new System.Windows.Forms.RichTextBox();
-            this.richTextBox12 = new System.Windows.Forms.RichTextBox();
-            this.richTextBox11 = new System.Windows.Forms.RichTextBox();
-            this.richTextBox16 = new System.Windows.Forms.RichTextBox();
-            this.richTextBox15 = new System.Windows.Forms.RichTextBox();
-            this.richTextBox14 = new System.Windows.Forms.RichTextBox();
-            this.richTextBox13 = new System.Windows.Forms.RichTextBox();
-            this.richTextBox10 = new System.Windows.Forms.RichTextBox();
-            this.richTextBox9 = new System.Windows.Forms.RichTextBox();
-            this.richTextBox7 = new System.Windows.Forms.RichTextBox();
-            this.richTextBox1 = new System.Windows.Forms.RichTextBox();
+            this.button2 = new System.Windows.Forms.Button();
+            this.button3 = new System.Windows.Forms.Button();
+            this.button4 = new System.Windows.Forms.Button();
+            this.button5 = new System.Windows.Forms.Button();
+            this.button6 = new System.Windows.Forms.Button();
+            this.button7 = new System.Windows.Forms.Button();
+            this.button8 = new System.Windows.Forms.Button();
+            this.button9 = new System.Windows.Forms.Button();
+            this.button10 = new System.Windows.Forms.Button();
+            this.button11 = new System.Windows.Forms.Button();
+            this.button12 = new System.Windows.Forms.Button();
+            this.button13 = new System.Windows.Forms.Button();
+            this.button14 = new System.Windows.Forms.Button();
+            this.button15 = new System.Windows.Forms.Button();
+            this.button16 = new System.Windows.Forms.Button();
+            this.button17 = new System.Windows.Forms.Button();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -240,6 +240,7 @@
             this.menuStrip1.Size = new System.Drawing.Size(454, 24);
             this.menuStrip1.TabIndex = 34;
             this.menuStrip1.Text = "menuStrip1";
+            this.menuStrip1.ItemClicked += new System.Windows.Forms.ToolStripItemClickedEventHandler(this.menuStrip1_ItemClicked);
             // 
             // fileToolStripMenuItem
             // 
@@ -253,13 +254,13 @@
             // newToolStripMenuItem1
             // 
             this.newToolStripMenuItem1.Name = "newToolStripMenuItem1";
-            this.newToolStripMenuItem1.Size = new System.Drawing.Size(103, 22);
+            this.newToolStripMenuItem1.Size = new System.Drawing.Size(180, 22);
             this.newToolStripMenuItem1.Text = "New";
             // 
             // closeToolStripMenuItem
             // 
             this.closeToolStripMenuItem.Name = "closeToolStripMenuItem";
-            this.closeToolStripMenuItem.Size = new System.Drawing.Size(103, 22);
+            this.closeToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.closeToolStripMenuItem.Text = "Close";
             // 
             // helpToolStripMenuItem
@@ -307,171 +308,219 @@
             this.Cancel_Game_Button.UseVisualStyleBackColor = true;
             this.Cancel_Game_Button.Click += new System.EventHandler(this.button4_Click);
             // 
-            // richTextBox5
+            // button2
             // 
-            this.richTextBox5.Location = new System.Drawing.Point(214, 150);
-            this.richTextBox5.Margin = new System.Windows.Forms.Padding(2);
-            this.richTextBox5.Name = "richTextBox5";
-            this.richTextBox5.ReadOnly = true;
-            this.richTextBox5.Size = new System.Drawing.Size(54, 51);
-            this.richTextBox5.TabIndex = 10;
-            this.richTextBox5.Text = "";
+            this.button2.BackColor = System.Drawing.SystemColors.Control;
+            this.button2.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.button2.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.button2.Location = new System.Drawing.Point(48, 99);
+            this.button2.Name = "button2";
+            this.button2.Size = new System.Drawing.Size(50, 50);
+            this.button2.TabIndex = 40;
+            this.button2.Text = "A";
+            this.button2.UseVisualStyleBackColor = false;
             // 
-            // richTextBox4
+            // button3
             // 
-            this.richTextBox4.Location = new System.Drawing.Point(214, 95);
-            this.richTextBox4.Margin = new System.Windows.Forms.Padding(2);
-            this.richTextBox4.Name = "richTextBox4";
-            this.richTextBox4.ReadOnly = true;
-            this.richTextBox4.Size = new System.Drawing.Size(54, 51);
-            this.richTextBox4.TabIndex = 6;
-            this.richTextBox4.Text = "";
+            this.button3.BackColor = System.Drawing.SystemColors.Control;
+            this.button3.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.button3.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.button3.Location = new System.Drawing.Point(104, 99);
+            this.button3.Name = "button3";
+            this.button3.Size = new System.Drawing.Size(50, 50);
+            this.button3.TabIndex = 41;
+            this.button3.Text = "-";
+            this.button3.UseVisualStyleBackColor = false;
             // 
-            // richTextBox2
+            // button4
             // 
-            this.richTextBox2.Location = new System.Drawing.Point(100, 95);
-            this.richTextBox2.Margin = new System.Windows.Forms.Padding(2);
-            this.richTextBox2.Name = "richTextBox2";
-            this.richTextBox2.ReadOnly = true;
-            this.richTextBox2.Size = new System.Drawing.Size(54, 51);
-            this.richTextBox2.TabIndex = 4;
-            this.richTextBox2.Text = "";
+            this.button4.BackColor = System.Drawing.SystemColors.Control;
+            this.button4.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.button4.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.button4.Location = new System.Drawing.Point(160, 99);
+            this.button4.Name = "button4";
+            this.button4.Size = new System.Drawing.Size(50, 50);
+            this.button4.TabIndex = 42;
+            this.button4.Text = "-";
+            this.button4.UseVisualStyleBackColor = false;
             // 
-            // richTextBox3
+            // button5
             // 
-            this.richTextBox3.Location = new System.Drawing.Point(157, 95);
-            this.richTextBox3.Margin = new System.Windows.Forms.Padding(2);
-            this.richTextBox3.Name = "richTextBox3";
-            this.richTextBox3.ReadOnly = true;
-            this.richTextBox3.Size = new System.Drawing.Size(54, 51);
-            this.richTextBox3.TabIndex = 5;
-            this.richTextBox3.Text = "";
+            this.button5.BackColor = System.Drawing.SystemColors.Control;
+            this.button5.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.button5.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.button5.Location = new System.Drawing.Point(216, 99);
+            this.button5.Name = "button5";
+            this.button5.Size = new System.Drawing.Size(50, 50);
+            this.button5.TabIndex = 43;
+            this.button5.Text = "-";
+            this.button5.UseVisualStyleBackColor = false;
             // 
-            // richTextBox6
+            // button6
             // 
-            this.richTextBox6.Location = new System.Drawing.Point(157, 150);
-            this.richTextBox6.Margin = new System.Windows.Forms.Padding(2);
-            this.richTextBox6.Name = "richTextBox6";
-            this.richTextBox6.ReadOnly = true;
-            this.richTextBox6.Size = new System.Drawing.Size(54, 51);
-            this.richTextBox6.TabIndex = 9;
-            this.richTextBox6.Text = "";
+            this.button6.BackColor = System.Drawing.SystemColors.Control;
+            this.button6.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.button6.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.button6.Location = new System.Drawing.Point(216, 155);
+            this.button6.Name = "button6";
+            this.button6.Size = new System.Drawing.Size(50, 50);
+            this.button6.TabIndex = 47;
+            this.button6.Text = "-";
+            this.button6.UseVisualStyleBackColor = false;
             // 
-            // richTextBox8
+            // button7
             // 
-            this.richTextBox8.Location = new System.Drawing.Point(43, 150);
-            this.richTextBox8.Margin = new System.Windows.Forms.Padding(2);
-            this.richTextBox8.Name = "richTextBox8";
-            this.richTextBox8.ReadOnly = true;
-            this.richTextBox8.Size = new System.Drawing.Size(54, 51);
-            this.richTextBox8.TabIndex = 7;
-            this.richTextBox8.Text = "";
+            this.button7.BackColor = System.Drawing.SystemColors.Control;
+            this.button7.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.button7.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.button7.Location = new System.Drawing.Point(160, 155);
+            this.button7.Name = "button7";
+            this.button7.Size = new System.Drawing.Size(50, 50);
+            this.button7.TabIndex = 46;
+            this.button7.Text = "-";
+            this.button7.UseVisualStyleBackColor = false;
             // 
-            // richTextBox12
+            // button8
             // 
-            this.richTextBox12.Location = new System.Drawing.Point(43, 205);
-            this.richTextBox12.Margin = new System.Windows.Forms.Padding(2);
-            this.richTextBox12.Name = "richTextBox12";
-            this.richTextBox12.ReadOnly = true;
-            this.richTextBox12.Size = new System.Drawing.Size(54, 51);
-            this.richTextBox12.TabIndex = 11;
-            this.richTextBox12.Text = "";
+            this.button8.BackColor = System.Drawing.SystemColors.Control;
+            this.button8.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.button8.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.button8.Location = new System.Drawing.Point(104, 155);
+            this.button8.Name = "button8";
+            this.button8.Size = new System.Drawing.Size(50, 50);
+            this.button8.TabIndex = 45;
+            this.button8.Text = "-";
+            this.button8.UseVisualStyleBackColor = false;
             // 
-            // richTextBox11
+            // button9
             // 
-            this.richTextBox11.Location = new System.Drawing.Point(100, 205);
-            this.richTextBox11.Margin = new System.Windows.Forms.Padding(2);
-            this.richTextBox11.Name = "richTextBox11";
-            this.richTextBox11.ReadOnly = true;
-            this.richTextBox11.Size = new System.Drawing.Size(54, 51);
-            this.richTextBox11.TabIndex = 12;
-            this.richTextBox11.Text = "";
+            this.button9.BackColor = System.Drawing.SystemColors.Control;
+            this.button9.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.button9.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.button9.Location = new System.Drawing.Point(48, 155);
+            this.button9.Name = "button9";
+            this.button9.Size = new System.Drawing.Size(50, 50);
+            this.button9.TabIndex = 44;
+            this.button9.Text = "-";
+            this.button9.UseVisualStyleBackColor = false;
             // 
-            // richTextBox16
+            // button10
             // 
-            this.richTextBox16.Location = new System.Drawing.Point(43, 260);
-            this.richTextBox16.Margin = new System.Windows.Forms.Padding(2);
-            this.richTextBox16.Name = "richTextBox16";
-            this.richTextBox16.ReadOnly = true;
-            this.richTextBox16.Size = new System.Drawing.Size(54, 51);
-            this.richTextBox16.TabIndex = 15;
-            this.richTextBox16.Text = "";
+            this.button10.BackColor = System.Drawing.SystemColors.Control;
+            this.button10.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.button10.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.button10.Location = new System.Drawing.Point(216, 211);
+            this.button10.Name = "button10";
+            this.button10.Size = new System.Drawing.Size(50, 50);
+            this.button10.TabIndex = 51;
+            this.button10.Text = "-";
+            this.button10.UseVisualStyleBackColor = false;
             // 
-            // richTextBox15
+            // button11
             // 
-            this.richTextBox15.Location = new System.Drawing.Point(100, 260);
-            this.richTextBox15.Margin = new System.Windows.Forms.Padding(2);
-            this.richTextBox15.Name = "richTextBox15";
-            this.richTextBox15.ReadOnly = true;
-            this.richTextBox15.Size = new System.Drawing.Size(54, 51);
-            this.richTextBox15.TabIndex = 16;
-            this.richTextBox15.Text = "";
+            this.button11.BackColor = System.Drawing.SystemColors.Control;
+            this.button11.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.button11.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.button11.Location = new System.Drawing.Point(160, 211);
+            this.button11.Name = "button11";
+            this.button11.Size = new System.Drawing.Size(50, 50);
+            this.button11.TabIndex = 50;
+            this.button11.Text = "-";
+            this.button11.UseVisualStyleBackColor = false;
             // 
-            // richTextBox14
+            // button12
             // 
-            this.richTextBox14.Location = new System.Drawing.Point(157, 260);
-            this.richTextBox14.Margin = new System.Windows.Forms.Padding(2);
-            this.richTextBox14.Name = "richTextBox14";
-            this.richTextBox14.ReadOnly = true;
-            this.richTextBox14.Size = new System.Drawing.Size(54, 51);
-            this.richTextBox14.TabIndex = 17;
-            this.richTextBox14.Text = "";
+            this.button12.BackColor = System.Drawing.SystemColors.Control;
+            this.button12.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.button12.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.button12.Location = new System.Drawing.Point(104, 211);
+            this.button12.Name = "button12";
+            this.button12.Size = new System.Drawing.Size(50, 50);
+            this.button12.TabIndex = 49;
+            this.button12.Text = "-";
+            this.button12.UseVisualStyleBackColor = false;
             // 
-            // richTextBox13
+            // button13
             // 
-            this.richTextBox13.Location = new System.Drawing.Point(214, 260);
-            this.richTextBox13.Margin = new System.Windows.Forms.Padding(2);
-            this.richTextBox13.Name = "richTextBox13";
-            this.richTextBox13.ReadOnly = true;
-            this.richTextBox13.Size = new System.Drawing.Size(54, 51);
-            this.richTextBox13.TabIndex = 18;
-            this.richTextBox13.Text = "";
+            this.button13.BackColor = System.Drawing.SystemColors.Control;
+            this.button13.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.button13.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.button13.Location = new System.Drawing.Point(48, 211);
+            this.button13.Name = "button13";
+            this.button13.Size = new System.Drawing.Size(50, 50);
+            this.button13.TabIndex = 48;
+            this.button13.Text = "-";
+            this.button13.UseVisualStyleBackColor = false;
             // 
-            // richTextBox10
+            // button14
             // 
-            this.richTextBox10.Location = new System.Drawing.Point(157, 205);
-            this.richTextBox10.Margin = new System.Windows.Forms.Padding(2);
-            this.richTextBox10.Name = "richTextBox10";
-            this.richTextBox10.ReadOnly = true;
-            this.richTextBox10.Size = new System.Drawing.Size(54, 51);
-            this.richTextBox10.TabIndex = 13;
-            this.richTextBox10.Text = "";
+            this.button14.BackColor = System.Drawing.SystemColors.Control;
+            this.button14.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.button14.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.button14.Location = new System.Drawing.Point(216, 267);
+            this.button14.Name = "button14";
+            this.button14.Size = new System.Drawing.Size(50, 50);
+            this.button14.TabIndex = 55;
+            this.button14.Text = "-";
+            this.button14.UseVisualStyleBackColor = false;
             // 
-            // richTextBox9
+            // button15
             // 
-            this.richTextBox9.Location = new System.Drawing.Point(214, 205);
-            this.richTextBox9.Margin = new System.Windows.Forms.Padding(2);
-            this.richTextBox9.Name = "richTextBox9";
-            this.richTextBox9.ReadOnly = true;
-            this.richTextBox9.Size = new System.Drawing.Size(54, 51);
-            this.richTextBox9.TabIndex = 14;
-            this.richTextBox9.Text = "";
+            this.button15.BackColor = System.Drawing.SystemColors.Control;
+            this.button15.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.button15.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.button15.Location = new System.Drawing.Point(160, 267);
+            this.button15.Name = "button15";
+            this.button15.Size = new System.Drawing.Size(50, 50);
+            this.button15.TabIndex = 54;
+            this.button15.Text = "-";
+            this.button15.UseVisualStyleBackColor = false;
             // 
-            // richTextBox7
+            // button16
             // 
-            this.richTextBox7.Location = new System.Drawing.Point(100, 150);
-            this.richTextBox7.Margin = new System.Windows.Forms.Padding(2);
-            this.richTextBox7.Name = "richTextBox7";
-            this.richTextBox7.ReadOnly = true;
-            this.richTextBox7.Size = new System.Drawing.Size(54, 51);
-            this.richTextBox7.TabIndex = 8;
-            this.richTextBox7.Text = "";
+            this.button16.BackColor = System.Drawing.SystemColors.Control;
+            this.button16.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.button16.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.button16.Location = new System.Drawing.Point(104, 267);
+            this.button16.Name = "button16";
+            this.button16.Size = new System.Drawing.Size(50, 50);
+            this.button16.TabIndex = 53;
+            this.button16.Text = "-";
+            this.button16.UseVisualStyleBackColor = false;
             // 
-            // richTextBox1
+            // button17
             // 
-            this.richTextBox1.Location = new System.Drawing.Point(43, 95);
-            this.richTextBox1.Margin = new System.Windows.Forms.Padding(2);
-            this.richTextBox1.Name = "richTextBox1";
-            this.richTextBox1.ReadOnly = true;
-            this.richTextBox1.Size = new System.Drawing.Size(54, 51);
-            this.richTextBox1.TabIndex = 3;
-            this.richTextBox1.Text = "";
+            this.button17.BackColor = System.Drawing.SystemColors.Control;
+            this.button17.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.button17.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.button17.Location = new System.Drawing.Point(48, 267);
+            this.button17.Name = "button17";
+            this.button17.Size = new System.Drawing.Size(50, 50);
+            this.button17.TabIndex = 52;
+            this.button17.Text = "-";
+            this.button17.UseVisualStyleBackColor = false;
             // 
             // BoggleClient
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(454, 357);
+            this.Controls.Add(this.button14);
+            this.Controls.Add(this.button15);
+            this.Controls.Add(this.button16);
+            this.Controls.Add(this.button17);
+            this.Controls.Add(this.button10);
+            this.Controls.Add(this.button11);
+            this.Controls.Add(this.button12);
+            this.Controls.Add(this.button13);
+            this.Controls.Add(this.button6);
+            this.Controls.Add(this.button7);
+            this.Controls.Add(this.button8);
+            this.Controls.Add(this.button9);
+            this.Controls.Add(this.button5);
+            this.Controls.Add(this.button4);
+            this.Controls.Add(this.button3);
+            this.Controls.Add(this.button2);
             this.Controls.Add(this.Cancel_Game_Button);
             this.Controls.Add(this.Enter_Game_Button);
             this.Controls.Add(this.label14);
@@ -491,22 +540,6 @@
             this.Controls.Add(this.label4);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.label2);
-            this.Controls.Add(this.richTextBox13);
-            this.Controls.Add(this.richTextBox14);
-            this.Controls.Add(this.richTextBox15);
-            this.Controls.Add(this.richTextBox16);
-            this.Controls.Add(this.richTextBox9);
-            this.Controls.Add(this.richTextBox10);
-            this.Controls.Add(this.richTextBox11);
-            this.Controls.Add(this.richTextBox12);
-            this.Controls.Add(this.richTextBox5);
-            this.Controls.Add(this.richTextBox6);
-            this.Controls.Add(this.richTextBox7);
-            this.Controls.Add(this.richTextBox8);
-            this.Controls.Add(this.richTextBox4);
-            this.Controls.Add(this.richTextBox3);
-            this.Controls.Add(this.richTextBox2);
-            this.Controls.Add(this.richTextBox1);
             this.Controls.Add(this.button1);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.textBox1);
@@ -553,22 +586,22 @@
         private System.Windows.Forms.ToolStripMenuItem closeToolStripMenuItem;
         private System.Windows.Forms.Button Enter_Game_Button;
         private System.Windows.Forms.Button Cancel_Game_Button;
-        private System.Windows.Forms.RichTextBox richTextBox5;
-        private System.Windows.Forms.RichTextBox richTextBox4;
-        private System.Windows.Forms.RichTextBox richTextBox2;
-        private System.Windows.Forms.RichTextBox richTextBox3;
-        private System.Windows.Forms.RichTextBox richTextBox6;
-        private System.Windows.Forms.RichTextBox richTextBox8;
-        private System.Windows.Forms.RichTextBox richTextBox12;
-        private System.Windows.Forms.RichTextBox richTextBox11;
-        private System.Windows.Forms.RichTextBox richTextBox16;
-        private System.Windows.Forms.RichTextBox richTextBox15;
-        private System.Windows.Forms.RichTextBox richTextBox14;
-        private System.Windows.Forms.RichTextBox richTextBox13;
-        private System.Windows.Forms.RichTextBox richTextBox10;
-        private System.Windows.Forms.RichTextBox richTextBox9;
-        private System.Windows.Forms.RichTextBox richTextBox7;
-        private System.Windows.Forms.RichTextBox richTextBox1;
+        private System.Windows.Forms.Button button2;
+        private System.Windows.Forms.Button button3;
+        private System.Windows.Forms.Button button4;
+        private System.Windows.Forms.Button button5;
+        private System.Windows.Forms.Button button6;
+        private System.Windows.Forms.Button button7;
+        private System.Windows.Forms.Button button8;
+        private System.Windows.Forms.Button button9;
+        private System.Windows.Forms.Button button10;
+        private System.Windows.Forms.Button button11;
+        private System.Windows.Forms.Button button12;
+        private System.Windows.Forms.Button button13;
+        private System.Windows.Forms.Button button14;
+        private System.Windows.Forms.Button button15;
+        private System.Windows.Forms.Button button16;
+        private System.Windows.Forms.Button button17;
     }
 }
 
