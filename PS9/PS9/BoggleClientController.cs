@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Dynamic;
 using System.Net.Http;
@@ -49,18 +50,20 @@ namespace PS9
         {
             view.SetOpponentScore(0);
             view.SetPlayerScore(0);
-            JoinGame(ActualTime);
+            JoinGame(view.GetDesiredTime());
+            StartGame();
         }
 
         private void CheckGameStatus()
         {
+            view.ShowErrorMessage("It's checking for the game status.");
             try
             {
                 using (HttpClient client = CreateClient(DesiredServer))
                 {
                     tokenSource = new CancellationTokenSource();
                     //view.EnableControls(false);
-                    
+
                 }
             }
             finally
@@ -98,13 +101,26 @@ namespace PS9
 
                     // Post to the server.
                     HttpResponseMessage response = await client.PostAsync(usersURI, content, tokenSource.Token);
+
+                    // Tell the user if there are any problems with their input.
                     if (response.StatusCode.Equals(403))
                     {
                         throw new Exception("You've given an invalid name/time limit!!");
-                    }else if (response.StatusCode.Equals(409))
+                    }
+                    else if (response.StatusCode.Equals(409))
                     {
                         throw new Exception("A player with the same username as you is already in the pending game!");
                     }
+                    // Otherwise, parse the input from the server.
+                    string responseBodyAsString = await response.Content.ReadAsStringAsync();
+                    dynamic responseBodyAsObject = JsonConvert.DeserializeObject(responseBodyAsString);
+                    GameID = responseBodyAsObject["GameID"];
+                    if ((bool)responseBodyAsObject["IsPending"])
+                    {
+                        CheckGameStatus();
+                    }
+                    return;
+
                 }
 
             }
@@ -129,7 +145,7 @@ namespace PS9
         {
             CancelGame();
         }
-        
+
 
         private async void CancelGame()
         {
@@ -208,7 +224,7 @@ namespace PS9
             return client;
         }
 
-
+        
 
 
 

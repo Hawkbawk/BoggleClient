@@ -58,7 +58,7 @@
     <Compile Include="BoggleClientContext.cs" />
     <Compile Include="BoggleClientController.cs" />
     <Compile Include="IBoggleService.cs" />
-    <Compile Include="Program.cs" />
+    <Compile Include="Launch.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="BoggleClient.resx">
       <DependentUpon>BoggleClient.cs</DependentUpon>
