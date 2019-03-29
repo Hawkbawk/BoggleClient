@@ -29,24 +29,25 @@ namespace PS9
             return ServerName_Textbox.Text;
         }
 
-        public void SetTimeLimit()
+        public void SetTimeLimit(int timeLimit)
         {
-
+            TimeLimit_Textbox.Text = timeLimit.ToString();
+            Remaining_Time_Label.Text = timeLimit.ToString();
         }
 
-        public void SetRemainingTime()
+        public void SetRemainingTime(int remainingTime)
         {
-            throw new NotImplementedException();
+            Remaining_Time_Label.Text = remainingTime.ToString();
         }
 
         public void SetPlayerScore(int score)
         {
-            throw new NotImplementedException();
+            Player_CurrentScore_Label.Text = score.ToString();
         }
 
         public void SetOpponentScore(int oppScore)
         {
-            throw new NotImplementedException();
+            Opponent_CurrentScore_Label.Text = oppScore.ToString();
         }
 
         public void SetCurrentPlayedWords(List<string> words)
