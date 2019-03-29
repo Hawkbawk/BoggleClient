@@ -10,12 +10,16 @@ using System.Windows.Forms;
 
 namespace PS9
 {
-    public partial class BoggleClient : Form
+    public partial class BoggleClient : Form, IBoggleService
     {
         public BoggleClient()
         {
             InitializeComponent();
         }
+
+        public event Action EnterGame;
+        public event Action CancelGame;
+        public event Action<string> SubmitWord;
 
         private void label1_Click(object sender, EventArgs e)
         {
@@ -45,6 +49,41 @@ namespace PS9
         private void button4_Click(object sender, EventArgs e)
         {
 
+        }
+
+        public string ObtainUsername()
+        {
+            throw new NotImplementedException();
+        }
+
+        public string ObtainDesiredServer()
+        {
+            throw new NotImplementedException();
+        }
+
+        public void SetTimeLimit()
+        {
+            throw new NotImplementedException();
+        }
+
+        public void SetRemainingTime()
+        {
+            throw new NotImplementedException();
+        }
+
+        public void SetPlayerScore(int score)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void SetOpponentScore(int oppScore)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void SetCurrentPlayedWords(List<string> words)
+        {
+            throw new NotImplementedException();
         }
     }
 }

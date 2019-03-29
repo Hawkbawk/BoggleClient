@@ -1,12 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace PS9
+
+namespace SSGui
 {
-    static class Program
+    /// <summary>
+    /// Runs a demo involving a SpreadsheetPanel
+    /// </summary>
+    static class Launch
     {
         /// <summary>
         /// The main entry point for the application.
@@ -16,10 +17,7 @@ namespace PS9
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            var context = BoggleClientContext.GetContext();
-            BoggleClientContext.GetContext().RunNew();
-
-            Application.Run(context);
+            Application.Run(new SpreadsheetDemo());
         }
     }
 }

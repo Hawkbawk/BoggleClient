@@ -6,29 +6,31 @@ using System.Threading.Tasks;
 
 namespace PS9
 {
-    class BoggleClientController : BoggleServiceInterface
+    class BoggleClientController
     {
-        public void CancelJoinRequest(string UserToken)
+        IBoggleService view;
+
+        public BoggleClientController(IBoggleService _view)
+        {
+            view = _view;
+
+            view.EnterGame += HandleEnterGame;
+            view.CancelGame += HandleCancelGame;
+            view.SubmitWord += HandleSubmitWord;
+
+        }
+
+        private void HandleSubmitWord(string obj)
         {
             throw new NotImplementedException();
         }
 
-        public void GameStatus(string GameID, bool Brief)
+        private void HandleCancelGame()
         {
             throw new NotImplementedException();
         }
 
-        public void JoinGame(string UserToken, int TimeLimit)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void PlayWord(string GameID, string UserToken, string Word)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void RegisterUser(string UserToken)
+        private void HandleEnterGame()
         {
             throw new NotImplementedException();
         }

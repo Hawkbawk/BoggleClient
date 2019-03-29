@@ -4,10 +4,10 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{E0661CFE-BB11-46A6-9138-273737B119DD}</ProjectGuid>
+    <ProjectGuid>{BC3D3E4C-66FE-403C-B17E-94A2D193B30E}</ProjectGuid>
     <OutputType>WinExe</OutputType>
-    <RootNamespace>PS9</RootNamespace>
-    <AssemblyName>PS9</AssemblyName>
+    <RootNamespace>SpreadsheetGUI</RootNamespace>
+    <AssemblyName>SpreadsheetGUI</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
@@ -33,6 +33,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="PresentationCore" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -44,21 +45,34 @@
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
+    <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BoggleClient.cs">
+    <Compile Include="CloseDialog.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="BoggleClient.Designer.cs">
-      <DependentUpon>BoggleClient.cs</DependentUpon>
+    <Compile Include="CloseDialog.Designer.cs">
+      <DependentUpon>CloseDialog.cs</DependentUpon>
     </Compile>
-    <Compile Include="BoggleClientContext.cs" />
-    <Compile Include="BoggleClientController.cs" />
-    <Compile Include="IBoggleService.cs" />
-    <Compile Include="Program.cs" />
+    <Compile Include="SendHelpForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="SendHelpForm.Designer.cs">
+      <DependentUpon>SendHelpForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="SpreadsheetWindowContext.cs" />
+    <Compile Include="ISpreadsheetView.cs" />
+    <Compile Include="Controller.cs" />
+    <Compile Include="SpreadsheetWindow.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="SpreadsheetWindow.Designer.cs">
+      <DependentUpon>SpreadsheetWindow.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Launch.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <EmbeddedResource Include="BoggleClient.resx">
-      <DependentUpon>BoggleClient.cs</DependentUpon>
+    <EmbeddedResource Include="CloseDialog.resx">
+      <DependentUpon>CloseDialog.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
@@ -68,8 +82,14 @@
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
     </Compile>
-    <None Include="ClassDiagram1.cd" />
+    <EmbeddedResource Include="SendHelpForm.resx">
+      <DependentUpon>SendHelpForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="SpreadsheetWindow.resx">
+      <DependentUpon>SpreadsheetWindow.cs</DependentUpon>
+    </EmbeddedResource>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -82,6 +102,23 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Properties\download.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Formula\Formula.csproj">
+      <Project>{d43d998c-9797-4cf4-9bb0-6de22753849a}</Project>
+      <Name>Formula</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SpreadsheetPanel\SpreadsheetPanel.csproj">
+      <Project>{f31299dc-288f-4e46-a3af-6bf461b21c79}</Project>
+      <Name>SpreadsheetPanel</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Spreadsheet\Spreadsheet.csproj">
+      <Project>{9025a594-df2a-4e6a-b8c2-f087ecc3e203}</Project>
+      <Name>Spreadsheet</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
