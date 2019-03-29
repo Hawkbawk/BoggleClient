@@ -49,6 +49,7 @@ namespace PS9
 
         private void CheckGameStatus()
         {
+            view.ShowErrorMessage("It's checking for the game status.");
             try
             {
                 using (HttpClient client = CreateClient(DesiredServer))
@@ -66,7 +67,7 @@ namespace PS9
 
         private void StartGame()
         {
-            throw new NotImplementedException();
+            view.ShowErrorMessage("It's starting the game!");
         }
 
         private async void JoinGame(int TimeLimit)
@@ -88,12 +89,27 @@ namespace PS9
 
                     // Post to the server.
                     HttpResponseMessage response = await client.PostAsync(usersURI, content, tokenSource.Token);
+
+                    // Tell the user if there are any problems with their input.
                     if (response.StatusCode.Equals(403))
                     {
                         throw new Exception("You've given an invalid name/time limit!!");
                     }else if (response.StatusCode.Equals(409))
                     {
                         throw new Exception("A player with the same username as you is already in the pending game!");
+                    }
+                    // Otherwise, parse the input from the server.
+                    dynamic responseBody = new ExpandoObject();
+                    responseBody = await response.Content.ReadAsStringAsync();
+                    responseBody = JsonConvert.DeserializeObject(responseBody);
+                    GameID = responseBody.GameID;
+                    if (responseBody.IsPending)
+                    {
+                        CheckGameStatus();
+                    }
+                    else
+                    {
+                        StartGame();
                     }
                 }
 
