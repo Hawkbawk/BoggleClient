@@ -28,7 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.textBox1 = new System.Windows.Forms.TextBox();
+            this.Word_Textbox = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
             this.button1 = new System.Windows.Forms.Button();
             this.label2 = new System.Windows.Forms.Label();
@@ -39,11 +39,11 @@
             this.label7 = new System.Windows.Forms.Label();
             this.label8 = new System.Windows.Forms.Label();
             this.label9 = new System.Windows.Forms.Label();
-            this.richTextBox17 = new System.Windows.Forms.RichTextBox();
+            this.ScoreBoard_Textbox = new System.Windows.Forms.RichTextBox();
             this.label10 = new System.Windows.Forms.Label();
-            this.textBox2 = new System.Windows.Forms.TextBox();
+            this.ServerName_Textbox = new System.Windows.Forms.TextBox();
             this.label11 = new System.Windows.Forms.Label();
-            this.textBox3 = new System.Windows.Forms.TextBox();
+            this.Username_Textbox = new System.Windows.Forms.TextBox();
             this.label12 = new System.Windows.Forms.Label();
             this.label13 = new System.Windows.Forms.Label();
             this.label14 = new System.Windows.Forms.Label();
@@ -65,15 +65,17 @@
             this.button15 = new System.Windows.Forms.Button();
             this.button16 = new System.Windows.Forms.Button();
             this.button17 = new System.Windows.Forms.Button();
+            this.label15 = new System.Windows.Forms.Label();
+            this.TimeLimit_Textbox = new System.Windows.Forms.TextBox();
             this.SuspendLayout();
             // 
-            // textBox1
+            // Word_Textbox
             // 
-            this.textBox1.Location = new System.Drawing.Point(47, 310);
-            this.textBox1.Margin = new System.Windows.Forms.Padding(2);
-            this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(324, 20);
-            this.textBox1.TabIndex = 0;
+            this.Word_Textbox.Location = new System.Drawing.Point(47, 310);
+            this.Word_Textbox.Margin = new System.Windows.Forms.Padding(2);
+            this.Word_Textbox.Name = "Word_Textbox";
+            this.Word_Textbox.Size = new System.Drawing.Size(324, 20);
+            this.Word_Textbox.TabIndex = 0;
             // 
             // label1
             // 
@@ -175,14 +177,15 @@
             this.label9.TabIndex = 26;
             this.label9.Text = "0";
             // 
-            // richTextBox17
+            // ScoreBoard_Textbox
             // 
-            this.richTextBox17.Location = new System.Drawing.Point(296, 190);
-            this.richTextBox17.Name = "richTextBox17";
-            this.richTextBox17.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.Vertical;
-            this.richTextBox17.Size = new System.Drawing.Size(145, 106);
-            this.richTextBox17.TabIndex = 27;
-            this.richTextBox17.Text = "";
+            this.ScoreBoard_Textbox.Location = new System.Drawing.Point(290, 190);
+            this.ScoreBoard_Textbox.Name = "ScoreBoard_Textbox";
+            this.ScoreBoard_Textbox.ReadOnly = true;
+            this.ScoreBoard_Textbox.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.Vertical;
+            this.ScoreBoard_Textbox.Size = new System.Drawing.Size(148, 106);
+            this.ScoreBoard_Textbox.TabIndex = 27;
+            this.ScoreBoard_Textbox.Text = "";
             // 
             // label10
             // 
@@ -193,33 +196,33 @@
             this.label10.TabIndex = 28;
             this.label10.Text = "Current Words:";
             // 
-            // textBox2
+            // ServerName_Textbox
             // 
-            this.textBox2.Location = new System.Drawing.Point(108, 38);
-            this.textBox2.Name = "textBox2";
-            this.textBox2.Size = new System.Drawing.Size(193, 20);
-            this.textBox2.TabIndex = 29;
+            this.ServerName_Textbox.Location = new System.Drawing.Point(109, 34);
+            this.ServerName_Textbox.Name = "ServerName_Textbox";
+            this.ServerName_Textbox.Size = new System.Drawing.Size(162, 20);
+            this.ServerName_Textbox.TabIndex = 29;
             // 
             // label11
             // 
             this.label11.AutoSize = true;
-            this.label11.Location = new System.Drawing.Point(32, 41);
+            this.label11.Location = new System.Drawing.Point(33, 34);
             this.label11.Name = "label11";
             this.label11.Size = new System.Drawing.Size(70, 13);
             this.label11.TabIndex = 30;
             this.label11.Text = "Client Server:";
             // 
-            // textBox3
+            // Username_Textbox
             // 
-            this.textBox3.Location = new System.Drawing.Point(108, 12);
-            this.textBox3.Name = "textBox3";
-            this.textBox3.Size = new System.Drawing.Size(193, 20);
-            this.textBox3.TabIndex = 31;
+            this.Username_Textbox.Location = new System.Drawing.Point(110, 8);
+            this.Username_Textbox.Name = "Username_Textbox";
+            this.Username_Textbox.Size = new System.Drawing.Size(161, 20);
+            this.Username_Textbox.TabIndex = 31;
             // 
             // label12
             // 
             this.label12.AutoSize = true;
-            this.label12.Location = new System.Drawing.Point(44, 19);
+            this.label12.Location = new System.Drawing.Point(44, 11);
             this.label12.Name = "label12";
             this.label12.Size = new System.Drawing.Size(58, 13);
             this.label12.TabIndex = 32;
@@ -228,7 +231,7 @@
             // label13
             // 
             this.label13.AutoSize = true;
-            this.label13.Location = new System.Drawing.Point(46, 60);
+            this.label13.Location = new System.Drawing.Point(258, 61);
             this.label13.Name = "label13";
             this.label13.Size = new System.Drawing.Size(113, 13);
             this.label13.TabIndex = 35;
@@ -237,7 +240,7 @@
             // label14
             // 
             this.label14.AutoSize = true;
-            this.label14.Location = new System.Drawing.Point(177, 61);
+            this.label14.Location = new System.Drawing.Point(419, 61);
             this.label14.Name = "label14";
             this.label14.Size = new System.Drawing.Size(19, 13);
             this.label14.TabIndex = 36;
@@ -245,24 +248,25 @@
             // 
             // Enter_Game_Button
             // 
-            this.Enter_Game_Button.Location = new System.Drawing.Point(347, 11);
+            this.Enter_Game_Button.Location = new System.Drawing.Point(347, 8);
             this.Enter_Game_Button.Margin = new System.Windows.Forms.Padding(2);
             this.Enter_Game_Button.Name = "Enter_Game_Button";
             this.Enter_Game_Button.Size = new System.Drawing.Size(91, 20);
             this.Enter_Game_Button.TabIndex = 38;
             this.Enter_Game_Button.Text = "Enter Game";
             this.Enter_Game_Button.UseVisualStyleBackColor = true;
+            this.Enter_Game_Button.Click += new System.EventHandler(this.Enter_Game_Button_Click);
             // 
             // Cancel_Game_Button
             // 
-            this.Cancel_Game_Button.Location = new System.Drawing.Point(347, 38);
+            this.Cancel_Game_Button.Location = new System.Drawing.Point(347, 32);
             this.Cancel_Game_Button.Margin = new System.Windows.Forms.Padding(2);
             this.Cancel_Game_Button.Name = "Cancel_Game_Button";
             this.Cancel_Game_Button.Size = new System.Drawing.Size(91, 20);
             this.Cancel_Game_Button.TabIndex = 39;
             this.Cancel_Game_Button.Text = "Cancel Game";
             this.Cancel_Game_Button.UseVisualStyleBackColor = true;
-            this.Cancel_Game_Button.Click += new System.EventHandler(this.button4_Click);
+            this.Cancel_Game_Button.Click += new System.EventHandler(this.Cancel_Game_Button_Click);
             // 
             // button2
             // 
@@ -456,11 +460,29 @@
             this.button17.Text = "-";
             this.button17.UseVisualStyleBackColor = false;
             // 
+            // label15
+            // 
+            this.label15.AutoSize = true;
+            this.label15.Location = new System.Drawing.Point(12, 61);
+            this.label15.Name = "label15";
+            this.label15.Size = new System.Drawing.Size(97, 13);
+            this.label15.TabIndex = 56;
+            this.label15.Text = "Desired TIme Limit:";
+            // 
+            // TimeLimit_Textbox
+            // 
+            this.TimeLimit_Textbox.Location = new System.Drawing.Point(110, 58);
+            this.TimeLimit_Textbox.Name = "TimeLimit_Textbox";
+            this.TimeLimit_Textbox.Size = new System.Drawing.Size(102, 20);
+            this.TimeLimit_Textbox.TabIndex = 57;
+            // 
             // BoggleClient
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(453, 342);
+            this.Controls.Add(this.TimeLimit_Textbox);
+            this.Controls.Add(this.label15);
             this.Controls.Add(this.button14);
             this.Controls.Add(this.button15);
             this.Controls.Add(this.button16);
@@ -482,11 +504,11 @@
             this.Controls.Add(this.label14);
             this.Controls.Add(this.label13);
             this.Controls.Add(this.label12);
-            this.Controls.Add(this.textBox3);
+            this.Controls.Add(this.Username_Textbox);
             this.Controls.Add(this.label11);
-            this.Controls.Add(this.textBox2);
+            this.Controls.Add(this.ServerName_Textbox);
             this.Controls.Add(this.label10);
-            this.Controls.Add(this.richTextBox17);
+            this.Controls.Add(this.ScoreBoard_Textbox);
             this.Controls.Add(this.label9);
             this.Controls.Add(this.label8);
             this.Controls.Add(this.label7);
@@ -497,7 +519,7 @@
             this.Controls.Add(this.label2);
             this.Controls.Add(this.button1);
             this.Controls.Add(this.label1);
-            this.Controls.Add(this.textBox1);
+            this.Controls.Add(this.Word_Textbox);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.HelpButton = true;
             this.Margin = new System.Windows.Forms.Padding(2);
@@ -506,7 +528,6 @@
             this.Name = "BoggleClient";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Boggle Game Client (NOT A VIRUS)";
-            this.Load += new System.EventHandler(this.BoggleClient_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -514,7 +535,7 @@
 
         #endregion
 
-        private System.Windows.Forms.TextBox textBox1;
+        private System.Windows.Forms.TextBox Word_Textbox;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.Label label2;
@@ -525,11 +546,11 @@
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.Label label8;
         private System.Windows.Forms.Label label9;
-        private System.Windows.Forms.RichTextBox richTextBox17;
+        private System.Windows.Forms.RichTextBox ScoreBoard_Textbox;
         private System.Windows.Forms.Label label10;
-        private System.Windows.Forms.TextBox textBox2;
+        private System.Windows.Forms.TextBox ServerName_Textbox;
         private System.Windows.Forms.Label label11;
-        private System.Windows.Forms.TextBox textBox3;
+        private System.Windows.Forms.TextBox Username_Textbox;
         private System.Windows.Forms.Label label12;
         private System.Windows.Forms.Label label13;
         private System.Windows.Forms.Label label14;
@@ -551,6 +572,8 @@
         private System.Windows.Forms.Button button15;
         private System.Windows.Forms.Button button16;
         private System.Windows.Forms.Button button17;
+        private System.Windows.Forms.Label label15;
+        private System.Windows.Forms.TextBox TimeLimit_Textbox;
     }
 }
 

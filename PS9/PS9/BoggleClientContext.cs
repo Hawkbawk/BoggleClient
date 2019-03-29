@@ -10,6 +10,7 @@ namespace PS9
     class BoggleClientContext : ApplicationContext
     {
         private static BoggleClientContext context;
+        private int windowCount;
 
         private BoggleClientContext()
         {
@@ -28,7 +29,9 @@ namespace PS9
         {
             BoggleClient view = new BoggleClient();
             new BoggleClientController(view);
+            windowCount++;
 
+            view.FormClosed += (o, e) => { if (--windowCount <= 0) ExitThread(); };
             view.Show();
         }
 

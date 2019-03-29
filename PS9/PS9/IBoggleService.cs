@@ -17,6 +17,8 @@ namespace PS9
         string ObtainDesiredServer();
 
         void SetTimeLimit();
+
+        int GetDesiredTime();
         void SetRemainingTime();
 
         void SetPlayerScore(int score);
@@ -25,7 +27,9 @@ namespace PS9
 
         void SetCurrentPlayedWords(List<string> words);
 
+        void EnableControls(bool state);
 
+        void ShowErrorMessage(string errorMsg);
 
 
 

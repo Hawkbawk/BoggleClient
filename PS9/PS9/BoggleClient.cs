@@ -1,11 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace PS9
@@ -15,51 +9,29 @@ namespace PS9
         public BoggleClient()
         {
             InitializeComponent();
+            ServerName_Textbox.Text = "http://ice.eng.utah.edu/BoggleService";
+            Cancel_Game_Button.Enabled = false;
         }
 
         public event Action EnterGame;
         public event Action CancelGame;
         public event Action<string> SubmitWord;
 
-        private void label1_Click(object sender, EventArgs e)
-        {
 
-        }
-
-        private void label6_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void BoggleClient_Load(object sender, EventArgs e)
-        {
-
-        }
-
-
-        private void button4_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void menuStrip1_ItemClicked(object sender, ToolStripItemClickedEventArgs e)
-        {
-
-        }
 
         public string ObtainUsername()
         {
-            throw new NotImplementedException();
+            return Username_Textbox.Text;
         }
 
         public string ObtainDesiredServer()
         {
-            throw new NotImplementedException();
+            return ServerName_Textbox.Text;
         }
 
         public void SetTimeLimit()
         {
-            throw new NotImplementedException();
+
         }
 
         public void SetRemainingTime()
@@ -80,6 +52,49 @@ namespace PS9
         public void SetCurrentPlayedWords(List<string> words)
         {
             throw new NotImplementedException();
+        }
+
+        public void EnableControls(bool state)
+        {
+            Username_Textbox.Enabled = state;
+            ServerName_Textbox.Enabled = state;
+            TimeLimit_Textbox.Enabled = state;
+            Enter_Game_Button.Enabled = state;
+            Cancel_Game_Button.Enabled = !state;
+        }
+
+        public void ShowErrorMessage(string errorMsg)
+        {
+            MessageBox.Show(errorMsg);
+        }
+
+        public int GetDesiredTime()
+        {
+            int time = -1;
+            try
+            {
+                time = Convert.ToInt32(TimeLimit_Textbox.Text);
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show("Please only enter in integer values for your time limit.");
+                return -1;
+            }
+            if (time < 5 || time > 120)
+            {
+                throw new ArgumentOutOfRangeException();
+            }
+            return time;
+        }
+
+        private void Enter_Game_Button_Click(object sender, EventArgs e)
+        {
+            EnterGame();
+        }
+
+        private void Cancel_Game_Button_Click(object sender, EventArgs e)
+        {
+            CancelGame();
         }
     }
 }

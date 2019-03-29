@@ -1,16 +1,16 @@
 ﻿using Newtonsoft.Json;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net.Http;
 using System.Text;
-using System.Threading.Tasks;
+using System.Threading;
 
 namespace PS9
 {
     class BoggleClientController
     {
-        IBoggleService view;
+        private IBoggleService view;
+        private CancellationTokenSource tokenSource;
+        private string UserToken { get; set; }
 
         public BoggleClientController(IBoggleService _view)
         {
@@ -20,6 +20,11 @@ namespace PS9
             view.CancelGame += HandleCancelGame;
             view.SubmitWord += HandleSubmitWord;
 
+        }
+
+        private void HandleEnterGame()
+        {
+            RegisterUser(view.ObtainUsername(), view.ObtainDesiredServer());
         }
 
         private void HandleSubmitWord(string obj)
@@ -32,30 +37,36 @@ namespace PS9
             throw new NotImplementedException();
         }
 
-        public async void RegisterUser(string UserToken, string address)
+        private async void RegisterUser(string username, string address)
         {
 
             try
             {
                 using (HttpClient client = CreateClient(address))
                 {
-                    //tokenSource = new CancellationTokenSource();
-                    //view.EnableControls(false);  //Stuff from Joe's Controller3
-                    StringContent content = new StringContent(JsonConvert.SerializeObject(UserToken), Encoding.UTF8, "POST BoggleService/users");
+                    tokenSource = new CancellationTokenSource();
+                    view.EnableControls(false);  //Stuff from Joe's Controller3
+                    StringContent content = new StringContent(JsonConvert.SerializeObject(username), Encoding.UTF8, "application/json");
+                    string usersURI = "http://ice.eng.utah.edu/BoggleService/users";
+                    HttpResponseMessage response = await client.PostAsync(usersURI, content, tokenSource.Token);
+                    if (response.StatusCode.Equals(403))
+                    {
+                        throw new Exception("You've given an invalid name!");
+                    }
+                    username = await response.Content.ReadAsStringAsync();
 
-                    //HttpResponseMessage response = await client.PostAsync("RegisterUser", content, tokenSource.Token);
                 }
 
             }
-            catch
+            catch (Exception e)
             {
-
+                view.ShowErrorMessage(e.ToString());
             }
             finally
             {
-                //view.EnableControls(true); //Stuff from Joe's Controller3
+                view.EnableControls(true);
             }
-            
+
         }
 
         private static HttpClient CreateClient(string address)
@@ -64,9 +75,9 @@ namespace PS9
             HttpClient client = new HttpClient();
             client.BaseAddress = new Uri(address);
 
-            //Tell the server that the client will accept this particular type of respose data
+            //Tell the server that the client will accept this particular type of response data
             client.DefaultRequestHeaders.Accept.Clear();
-            client.DefaultRequestHeaders.Add("Accept", address);
+            client.DefaultRequestHeaders.Add("Accept", "application/json");
 
             return client;
         }
