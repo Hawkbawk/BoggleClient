@@ -25,6 +25,15 @@ namespace PS9
         private void HandleEnterGame()
         {
             RegisterUser(view.ObtainUsername(), view.ObtainDesiredServer());
+            setupGame();
+
+        }
+
+        private void setupGame()
+        {
+            view.SetOpponentScore(0);
+            view.SetPlayerScore(0);
+            view.SetTimeLimit(view.GetDesiredTime());
         }
 
         private void HandleSubmitWord(string obj)
