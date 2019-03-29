@@ -10,6 +10,7 @@ namespace PS9
         {
             InitializeComponent();
             ServerName_Textbox.Text = "http://ice.eng.utah.edu";
+            RegisterUser_Button.Enabled = true;
             Cancel_Game_Button.Enabled = false;
             CancelRegister_Button.Enabled = false;
             Enter_Game_Button.Enabled = false;
@@ -58,11 +59,24 @@ namespace PS9
             throw new NotImplementedException();
         }
 
-        public void EnableControls(bool state)
+        public void EnableTextBox(bool state)
         {
             Username_Textbox.Enabled = state;
             ServerName_Textbox.Enabled = state;
             TimeLimit_Textbox.Enabled = state;
+        }
+
+        public void EnableControlsRegister(bool state)
+        {
+            EnableTextBox(state);
+            Enter_Game_Button.Enabled = false;
+            RegisterUser_Button.Enabled = state;
+            CancelRegister_Button.Enabled = !state;
+        }
+
+        public void EnableControlsJoin(bool state)
+        {
+            EnableTextBox(state);
             Enter_Game_Button.Enabled = state;
             Cancel_Game_Button.Enabled = !state;
         }
@@ -93,15 +107,11 @@ namespace PS9
 
         private void Enter_Game_Button_Click(object sender, EventArgs e)
         {
-            Enter_Game_Button.Enabled = false;
-            Cancel_Game_Button.Enabled = true;
             EnterGame();
         }
 
         private void Cancel_Game_Button_Click(object sender, EventArgs e)
         {
-            Enter_Game_Button.Enabled = true;
-            Cancel_Game_Button.Enabled = false;
             CancelGame();
         }
 
@@ -112,18 +122,7 @@ namespace PS9
 
         private void CancelRegister_Button_Click(object sender, EventArgs e)
         {
-            // Disables the cancel button and 
-            CancelRegister_Button.Enabled = false;
-            RegisterUser_Button.Enabled = true;
-            EnableTextboxes(true);
             CancelRegister();
-        }
-
-        private void EnableTextboxes(bool state)
-        {
-            Username_Textbox.Enabled = state;
-            ServerName_Textbox.Enabled = state;
-            TimeLimit_Textbox.Enabled = state;
         }
     }
 }

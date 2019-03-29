@@ -29,7 +29,6 @@ namespace PS9
 
         private void HandleRegisterUser()
         {
-            
             RegisterUser(view.ObtainUsername());
         }
 
@@ -40,8 +39,6 @@ namespace PS9
 
         private void HandleEnterGame()
         {
-            
-            RegisterUser(view.ObtainUsername());
             view.SetOpponentScore(0);
             view.SetPlayerScore(0);
             JoinGame(ActualTime);
@@ -55,7 +52,7 @@ namespace PS9
                 using (HttpClient client = CreateClient(DesiredServer))
                 {
                     tokenSource = new CancellationTokenSource();
-                    view.EnableControls(false);
+                    //view.EnableControls(false);
                     
                 }
             }
@@ -77,7 +74,7 @@ namespace PS9
                 using (HttpClient client = CreateClient(DesiredServer))
                 {
                     tokenSource = new CancellationTokenSource();
-                    view.EnableControls(false);  //Stuff from Joe's Controller3
+                    view.EnableControlsJoin(false);  //Stuff from Joe's Controller3
                     // Create a dynamic object that will be serialized.
                     dynamic body = new ExpandoObject();
                     body.UserToken = UserToken;
@@ -120,7 +117,7 @@ namespace PS9
             }
             finally
             {
-                view.EnableControls(true);
+                view.EnableControlsJoin(true);
             }
         }
 
@@ -144,7 +141,7 @@ namespace PS9
                 using (HttpClient client = CreateClient(DesiredServer))
                 {
                     tokenSource.Cancel();
-                    view.EnableControls(false);  //Stuff from Joe's Controller3
+                    view.EnableControlsJoin(false);  //Stuff from Joe's Controller3
                     StringContent content = new StringContent(JsonConvert.SerializeObject(UserToken), Encoding.UTF8, "application/json");
                     string gamesURI = DesiredServer + "/BoggleService/games";
                     HttpResponseMessage response = await client.PutAsync(gamesURI, content, tokenSource.Token);
@@ -161,7 +158,7 @@ namespace PS9
             }
             finally
             {
-                view.EnableControls(true);
+                view.EnableControlsJoin(true);
             }
 
         }
@@ -176,6 +173,7 @@ namespace PS9
                 using (HttpClient client = CreateClient(DesiredServer))
                 {
                     tokenSource = new CancellationTokenSource();
+                    view.EnableControlsRegister(false);
                     StringContent content = new StringContent(JsonConvert.SerializeObject(username), Encoding.UTF8, "application/json");
                     string usersURI = DesiredServer + "/BoggleService/users";
                     HttpResponseMessage response = await client.PostAsync(usersURI, content, tokenSource.Token);
@@ -191,6 +189,11 @@ namespace PS9
             catch (Exception e)
             {
                 view.ShowErrorMessage(e.ToString());
+            }
+            finally
+            {
+                view.EnableControlsRegister(true);
+                view.EnableControlsJoin(true);
             }
 
         }
