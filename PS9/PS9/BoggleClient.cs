@@ -69,7 +69,7 @@ namespace PS9
         public void EnableControlsRegister(bool state)
         {
             EnableTextBox(state);
-            Enter_Game_Button.Enabled = false;
+            Enter_Game_Button.Enabled = state;
             RegisterUser_Button.Enabled = state;
             CancelRegister_Button.Enabled = !state;
         }
@@ -80,6 +80,15 @@ namespace PS9
             Enter_Game_Button.Enabled = state;
             Cancel_Game_Button.Enabled = !state;
         }
+
+        public void EnableControlsInGame(bool state)
+        {
+            EnableTextBox(state);
+            Enter_Game_Button.Enabled = state;
+            Cancel_Game_Button.Enabled = !state;
+            RegisterUser_Button.Enabled = state;
+        }
+
 
         public void ShowErrorMessage(string errorMsg)
         {

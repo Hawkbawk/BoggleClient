@@ -33,6 +33,8 @@ namespace PS9
 
         void EnableControlsJoin(bool state);
 
+        void EnableControlsInGame(bool state);
+
         void ShowErrorMessage(string errorMsg);
 
 

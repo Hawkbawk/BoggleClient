@@ -66,7 +66,12 @@ namespace PS9
 
         private void StartGame()
         {
-            view.ShowErrorMessage("It's starting the game!");
+            view.EnableControlsInGame(false);
+
+
+
+
+            view.EnableControlsInGame(true);
         }
 
         private async void JoinGame(int TimeLimit)
@@ -193,7 +198,6 @@ namespace PS9
             finally
             {
                 view.EnableControlsRegister(true);
-                view.EnableControlsJoin(true);
             }
 
         }
