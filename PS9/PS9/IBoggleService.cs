@@ -29,7 +29,9 @@ namespace PS9
 
         void SetCurrentPlayedWords(List<string> words);
 
-        void EnableControls(bool state);
+        void EnableControlsRegister(bool state);
+
+        void EnableControlsJoin(bool state);
 
         void ShowErrorMessage(string errorMsg);
 
