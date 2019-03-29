@@ -37,7 +37,7 @@ namespace PS9
         {
             TimeLimit_Textbox.Text = timeLimit.ToString();
             Time_Limit_Label.Text = timeLimit.ToString();
-            Remaining_Time_Label.Text = timeLimit.ToString();
+            Remaining_Time_Label.Text = timeLimit.ToString();           //Needs to be fixed to be with the server rather than with the local
         }
 
         public void SetRemainingTime(int remainingTime)
@@ -60,35 +60,37 @@ namespace PS9
             throw new NotImplementedException();
         }
 
-        public void EnableTextBox(bool state)
+        public void EnableTextBoxAndRegister(bool state)
         {
             Username_Textbox.Enabled = state;
             ServerName_Textbox.Enabled = state;
             TimeLimit_Textbox.Enabled = state;
+            RegisterUser_Button.Enabled = state;
         }
 
         public void EnableControlsRegister(bool state)
         {
-            EnableTextBox(state);
-            Enter_Game_Button.Enabled = state;
-            RegisterUser_Button.Enabled = state;
+            EnableTextBoxAndRegister(state);
             CancelRegister_Button.Enabled = !state;
+        }
+
+        public void EnableEnterGameButton(bool state)
+        {
+            Enter_Game_Button.Enabled = state;
         }
 
         public void EnableControlsJoin(bool state)
         {
-            EnableTextBox(state);
-            Enter_Game_Button.Enabled = state;
+            EnableTextBoxAndRegister(state);
+            EnableEnterGameButton(state);
             Cancel_Game_Button.Enabled = !state;
-            RegisterUser_Button.Enabled = state;
         }
 
         public void EnableControlsInGame(bool state)
         {
-            EnableTextBox(state);
-            Enter_Game_Button.Enabled = state;
+            EnableTextBoxAndRegister(state);
+            EnableEnterGameButton(state);
             Cancel_Game_Button.Enabled = !state;
-            RegisterUser_Button.Enabled = state;
         }
 
 
@@ -106,7 +108,7 @@ namespace PS9
             }
             catch (Exception e)
             {
-                MessageBox.Show("Please only enter in integer values for your time limit.");
+                ShowErrorMessage("Please only enter in integer values for your time limit.");
                 return -1;
             }
             if (time < 5 || time > 120)

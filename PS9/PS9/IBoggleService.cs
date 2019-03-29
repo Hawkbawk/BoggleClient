@@ -32,11 +32,14 @@ namespace PS9
 
         void EnableControlsRegister(bool state);
 
+        void EnableEnterGameButton(bool state);
+
         void EnableControlsJoin(bool state);
 
         void EnableControlsInGame(bool state);
 
         void ShowErrorMessage(string errorMsg);
 
+        void EnableTextBoxAndRegister(bool state);
     }
 }
