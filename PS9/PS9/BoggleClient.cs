@@ -81,6 +81,15 @@ namespace PS9
             Cancel_Game_Button.Enabled = !state;
         }
 
+        public void EnableControlsInGame(bool state)
+        {
+            EnableTextBox(state);
+            Enter_Game_Button.Enabled = state;
+            Cancel_Game_Button.Enabled = !state;
+            RegisterUser_Button.Enabled = state;
+        }
+
+
         public void ShowErrorMessage(string errorMsg)
         {
             MessageBox.Show(errorMsg);

@@ -63,7 +63,12 @@ namespace PS9
 
         private void StartGame()
         {
-            throw new NotImplementedException();
+            view.EnableControlsInGame(false);
+
+
+
+
+            view.EnableControlsInGame(true);
         }
 
         private async void JoinGame(int TimeLimit)
