@@ -9,6 +9,8 @@ namespace PS9
     interface IBoggleService
     {
         event Action EnterGame;
+        event Action RegisterUser;
+        event Action CancelRegister;
         event Action CancelGame;
         event Action<string> SubmitWord;
 

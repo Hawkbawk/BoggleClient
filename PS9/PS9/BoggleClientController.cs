@@ -1,5 +1,6 @@
 ﻿using Newtonsoft.Json;
 using System;
+using System.Dynamic;
 using System.Net.Http;
 using System.Text;
 using System.Threading;
@@ -11,6 +12,9 @@ namespace PS9
         private IBoggleService view;
         private CancellationTokenSource tokenSource;
         private string UserToken { get; set; }
+        private int ActualTime { get; set; }
+        private string DesiredServer { get; set; }
+        private string GameID { get; set; }
 
         public BoggleClientController(IBoggleService _view)
         {
@@ -19,51 +23,78 @@ namespace PS9
             view.EnterGame += HandleEnterGame;
             view.CancelGame += HandleCancelGame;
             view.SubmitWord += HandleSubmitWord;
+            view.CancelRegister += HandleCancelRegister;
+            view.RegisterUser += HandleRegisterUser;
+        }
 
+        private void HandleRegisterUser()
+        {
+            
+            RegisterUser(view.ObtainUsername());
+        }
+
+        private void HandleCancelRegister()
+        {
+            tokenSource.Cancel();
         }
 
         private void HandleEnterGame()
         {
-            RegisterUser(view.ObtainUsername(), view.ObtainDesiredServer());
-            setupGame();
-
-        }
-
-        private void setupGame()
-        {
+            
+            RegisterUser(view.ObtainUsername());
             view.SetOpponentScore(0);
             view.SetPlayerScore(0);
-            view.SetTimeLimit(view.GetDesiredTime());
+            JoinGame(ActualTime);
         }
 
-        private void HandleSubmitWord(string obj)
+        private void CheckGameStatus()
         {
-            throw new NotImplementedException();
-        }
-
-        private void HandleCancelGame()
-        {
-            throw new NotImplementedException();
-        }
-
-        private async void RegisterUser(string username, string address)
-        {
-
             try
             {
-                using (HttpClient client = CreateClient(address))
+                using (HttpClient client = CreateClient(DesiredServer))
+                {
+                    tokenSource = new CancellationTokenSource();
+                    view.EnableControls(false);
+                    
+                }
+            }
+            finally
+            {
+
+            }
+        }
+
+        private void StartGame()
+        {
+            throw new NotImplementedException();
+        }
+
+        private async void JoinGame(int TimeLimit)
+        {
+            try
+            {
+                using (HttpClient client = CreateClient(DesiredServer))
                 {
                     tokenSource = new CancellationTokenSource();
                     view.EnableControls(false);  //Stuff from Joe's Controller3
-                    StringContent content = new StringContent(JsonConvert.SerializeObject(username), Encoding.UTF8, "application/json");
-                    string usersURI = "http://ice.eng.utah.edu/BoggleService/users";
+                    // Create a dynamic object that will be serialized.
+                    dynamic body = new ExpandoObject();
+                    body.UserToken = UserToken;
+                    body.TimeLimit = TimeLimit;
+
+                    // Serialize the body and create the URI
+                    StringContent content = new StringContent(JsonConvert.SerializeObject(body), Encoding.UTF8, "application/json");
+                    string usersURI = DesiredServer + "/BoggleService/games";
+
+                    // Post to the server.
                     HttpResponseMessage response = await client.PostAsync(usersURI, content, tokenSource.Token);
                     if (response.StatusCode.Equals(403))
                     {
-                        throw new Exception("You've given an invalid name!");
+                        throw new Exception("You've given an invalid name/time limit!!");
+                    }else if (response.StatusCode.Equals(409))
+                    {
+                        throw new Exception("A player with the same username as you is already in the pending game!");
                     }
-                    username = await response.Content.ReadAsStringAsync();
-
                 }
 
             }
@@ -74,6 +105,76 @@ namespace PS9
             finally
             {
                 view.EnableControls(true);
+            }
+        }
+
+
+
+        private void HandleSubmitWord(string obj)
+        {
+            throw new NotImplementedException();
+        }
+
+        private void HandleCancelGame()
+        {
+            CancelGame();
+        }
+        
+
+        private async void CancelGame()
+        {
+            try
+            {
+                using (HttpClient client = CreateClient(DesiredServer))
+                {
+                    tokenSource.Cancel();
+                    view.EnableControls(false);  //Stuff from Joe's Controller3
+                    StringContent content = new StringContent(JsonConvert.SerializeObject(UserToken), Encoding.UTF8, "application/json");
+                    string gamesURI = DesiredServer + "/BoggleService/games";
+                    HttpResponseMessage response = await client.PutAsync(gamesURI, content, tokenSource.Token);
+                    if (response.StatusCode.Equals(403))
+                    {
+                        throw new Exception("UserToken is invalid or is not a player in the pending game.");
+                    }
+                }
+
+            }
+            catch (Exception e)
+            {
+                view.ShowErrorMessage(e.ToString());
+            }
+            finally
+            {
+                view.EnableControls(true);
+            }
+
+        }
+
+
+        private async void RegisterUser(string username)
+        {
+
+            DesiredServer = view.ObtainDesiredServer();
+            try
+            {
+                using (HttpClient client = CreateClient(DesiredServer))
+                {
+                    tokenSource = new CancellationTokenSource();
+                    StringContent content = new StringContent(JsonConvert.SerializeObject(username), Encoding.UTF8, "application/json");
+                    string usersURI = DesiredServer + "/BoggleService/users";
+                    HttpResponseMessage response = await client.PostAsync(usersURI, content, tokenSource.Token);
+                    if (response.StatusCode.Equals(403))
+                    {
+                        throw new Exception("You've given an invalid name!");
+                    }
+                    username = await response.Content.ReadAsStringAsync();
+                    UserToken = (string)JsonConvert.DeserializeObject(username);
+                }
+
+            }
+            catch (Exception e)
+            {
+                view.ShowErrorMessage(e.ToString());
             }
 
         }

@@ -9,15 +9,17 @@ namespace PS9
         public BoggleClient()
         {
             InitializeComponent();
-            ServerName_Textbox.Text = "http://ice.eng.utah.edu/BoggleService";
+            ServerName_Textbox.Text = "http://ice.eng.utah.edu";
             Cancel_Game_Button.Enabled = false;
+            CancelRegister_Button.Enabled = false;
+            Enter_Game_Button.Enabled = false;
         }
 
         public event Action EnterGame;
         public event Action CancelGame;
         public event Action<string> SubmitWord;
-
-
+        public event Action RegisterUser;
+        public event Action CancelRegister;
 
         public string ObtainUsername()
         {
@@ -91,12 +93,37 @@ namespace PS9
 
         private void Enter_Game_Button_Click(object sender, EventArgs e)
         {
+            Enter_Game_Button.Enabled = false;
+            Cancel_Game_Button.Enabled = true;
             EnterGame();
         }
 
         private void Cancel_Game_Button_Click(object sender, EventArgs e)
         {
+            Enter_Game_Button.Enabled = true;
+            Cancel_Game_Button.Enabled = false;
             CancelGame();
+        }
+
+        private void RegisterUser_Button_Click(object sender, EventArgs e)
+        {
+            RegisterUser();
+        }
+
+        private void CancelRegister_Button_Click(object sender, EventArgs e)
+        {
+            // Disables the cancel button and 
+            CancelRegister_Button.Enabled = false;
+            RegisterUser_Button.Enabled = true;
+            EnableTextboxes(true);
+            CancelRegister();
+        }
+
+        private void EnableTextboxes(bool state)
+        {
+            Username_Textbox.Enabled = state;
+            ServerName_Textbox.Enabled = state;
+            TimeLimit_Textbox.Enabled = state;
         }
     }
 }
