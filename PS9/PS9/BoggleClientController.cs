@@ -25,6 +25,14 @@ namespace PS9
             view.SubmitWord += HandleSubmitWord;
             view.CancelRegister += HandleCancelRegister;
             view.RegisterUser += HandleRegisterUser;
+            view.GetHelp += HandleGetHelp;
+        }
+
+        private void HandleGetHelp()
+        {
+            view.ShowErrorMessage("The Rules of Boggle can be found here: http://en.wikipedia.org/wiki/Boggle. " +
+                "With this client, all you need to do is register your username with our server by typing it into the username box" +
+                "then all you  ");
         }
 
         private void HandleRegisterUser()
@@ -182,6 +190,7 @@ namespace PS9
             finally
             {
                 view.EnableControlsRegister(true);
+
             }
 
         }

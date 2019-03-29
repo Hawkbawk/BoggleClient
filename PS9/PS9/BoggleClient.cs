@@ -21,6 +21,7 @@ namespace PS9
         public event Action<string> SubmitWord;
         public event Action RegisterUser;
         public event Action CancelRegister;
+        public event Action GetHelp;
 
         public string ObtainUsername()
         {
@@ -79,6 +80,7 @@ namespace PS9
             EnableTextBox(state);
             Enter_Game_Button.Enabled = state;
             Cancel_Game_Button.Enabled = !state;
+            RegisterUser_Button.Enabled = state;
         }
 
         public void EnableControlsInGame(bool state)
@@ -132,6 +134,11 @@ namespace PS9
         private void CancelRegister_Button_Click(object sender, EventArgs e)
         {
             CancelRegister();
+        }
+
+        private void Help_Button_Clicked(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            GetHelp();
         }
     }
 }
