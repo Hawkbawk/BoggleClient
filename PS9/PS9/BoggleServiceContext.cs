@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ISpreadsheetView
+namespace PS9
 {
-    public class Class1
+    class BoggleServiceContext
     {
     }
 }
