@@ -182,7 +182,6 @@ namespace PS9
             finally
             {
                 view.EnableControlsRegister(true);
-                view.EnableControlsJoin(true);
             }
 
         }
