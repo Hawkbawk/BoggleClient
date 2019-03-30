@@ -175,5 +175,19 @@ namespace PS9
         {
             GetHelp();
         }
+
+        private void Word_Textbox_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyData == Keys.Enter)
+            {
+                Enter_Button_Click(sender, e);
+            }
+        }
+
+        private void Enter_Button_Click(object sender, EventArgs e)
+        {
+            SubmitWord(Word_Textbox.Text);
+            Word_Textbox.ResetText();
+        }
     }
 }

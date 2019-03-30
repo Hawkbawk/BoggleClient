@@ -78,6 +78,7 @@
             this.Word_Textbox.Name = "Word_Textbox";
             this.Word_Textbox.Size = new System.Drawing.Size(324, 20);
             this.Word_Textbox.TabIndex = 0;
+            this.Word_Textbox.KeyDown += new System.Windows.Forms.KeyEventHandler(this.Word_Textbox_KeyDown);
             // 
             // label1
             // 
@@ -98,6 +99,7 @@
             this.Enter_Button.TabIndex = 2;
             this.Enter_Button.Text = "Enter";
             this.Enter_Button.UseVisualStyleBackColor = true;
+            this.Enter_Button.Click += new System.EventHandler(this.Enter_Button_Click);
             // 
             // label2
             // 
