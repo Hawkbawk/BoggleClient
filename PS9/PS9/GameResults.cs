@@ -20,7 +20,7 @@ namespace PS9
 
         private void OK_Button_Click(object sender, EventArgs e)
         {
-
+            this.Close();
         }
 
 

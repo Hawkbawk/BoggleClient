@@ -17,6 +17,8 @@ namespace PS9
         private string DesiredServer { get; set; }
         private string GameID { get; set; }
 
+        private GameResults gr;
+
         public BoggleClientController(IBoggleService _view)
         {
             view = _view;
@@ -78,7 +80,7 @@ namespace PS9
             view.EnableControlsInGame(false);
 
 
-
+            
 
             view.EnableControlsInGame(true);
         }
