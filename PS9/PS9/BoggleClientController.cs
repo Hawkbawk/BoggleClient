@@ -364,11 +364,13 @@ namespace PS9
                     {
                         view.SetPlayerScore(responseAsObject.Player1.Score.ToString());
                         view.SetOpponentScore(responseAsObject.Player2.Score.ToString());
+                        view.SetOpponentNickname(responseAsObject.Player2.Nickname);
                     }
                     else
                     {
                         view.SetPlayerScore(responseAsObject.Player2.Score.ToString());
                         view.SetOpponentScore(responseAsObject.Player1.Score.ToString());
+                        view.SetOpponentNickname(responseAsObject.Player1.Nickname);
                     }
 
 
