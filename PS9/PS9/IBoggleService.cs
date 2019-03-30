@@ -37,7 +37,7 @@ namespace PS9
 
         void ShowErrorMessage(string errorMsg);
 
-
+        void SetUpBoard(string boardContents);
 
     }
 }

@@ -133,5 +133,10 @@ namespace PS9
         {
             CancelRegister();
         }
+
+        public void SetUpBoard(string boardContents)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
