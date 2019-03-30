@@ -47,7 +47,7 @@ namespace PS9
             Remaining_Time_Label.Text = timeLimit;          
         }
 
-        public async void SetRemainingTime(string remainingTime)
+        public void SetRemainingTime(string remainingTime)
         {
             Remaining_Time_Label.Text = remainingTime;
         }
@@ -98,6 +98,7 @@ namespace PS9
             EnableTextBoxAndRegister(state);
             EnableEnterGameButton(!state);
             Cancel_Game_Button.Enabled = state;
+            RegisterUser_Button.Enabled = !state;
         }
 
 
