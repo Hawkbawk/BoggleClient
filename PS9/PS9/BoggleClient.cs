@@ -227,8 +227,15 @@ namespace PS9
             RegisterUser_Button.Enabled = true;
             Cancel_Game_Button.Enabled = false;
             CancelRegister_Button.Enabled = false;
-            Enter_Game_Button.Enabled = false;
+            Enter_Game_Button.Enabled = true;
             ScoreBoard_Textbox.ReadOnly = true;
+            SetOpponentScore("0");
+            SetPlayerScore("0");
+            ScoreBoard_Textbox.ResetText();
+            SetOpponentNickname("...");
+            SetRemainingTime("0");
+            SetTimeLimit("0");
+
         }
     }
 }

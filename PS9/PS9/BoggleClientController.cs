@@ -20,6 +20,7 @@ namespace PS9
         private string Board { get; set; }
         private string DesiredServer { get; set; }
         private bool GameCompleted { get; set; }
+        private bool InAGame { get; set; }
         private string GameID { get; set; }
         private string Nickname { get; set; }
         private string UserToken { get; set; }
@@ -73,6 +74,9 @@ namespace PS9
             finally
             {
                 view.EnableControlsJoin(true);
+                view.Reset();
+                view.EnableTimer(false);
+                InAGame = false;
             }
         }
 
@@ -129,6 +133,10 @@ namespace PS9
 
         private async void HandleEnterGame()
         {
+            if (InAGame)
+            {
+                return;
+            }
             view.SetOpponentScore("0");
             view.SetPlayerScore("0");
             int desiredTime = 0;
@@ -194,13 +202,9 @@ namespace PS9
 
                     // Tell the user if there are any problems with their input.
                     // TODO This doesn't actually work for some reason. Fix it.
-                    if (response.StatusCode.Equals())
+                    if (!response.IsSuccessStatusCode)
                     {
-                        throw new Exception("You've given an invalid name/time limit!!");
-                    }
-                    else if (response.StatusCode.Equals(HttpStatus))
-                    {
-                        throw new Exception("A player with the same username as you is already in the pending game!");
+                        throw new Exception("Either you're already in a game, or you haven't registered with the server!");
                     }
                     // Otherwise, parse the input from the server.
                     string responseBodyAsString = await response.Content.ReadAsStringAsync();
@@ -220,6 +224,10 @@ namespace PS9
 
         private async void PlayWord(string word)
         {
+            if (!InAGame)
+            {
+                return;
+            }
             try
             {
                 using (HttpClient client = CreateClient(DesiredServer))
@@ -320,6 +328,12 @@ namespace PS9
                     {
                         await CheckGameStatus();
                     }
+                    // Requery the server for the new information.
+                    response = await client.GetAsync(gamesURI, tokenSource.Token);
+                    responseAsString = await response.Content.ReadAsStringAsync();
+                    responseAsObject = JsonConvert.DeserializeObject(responseAsString);
+
+                    // Parse all the returned things.
                     Board = responseAsObject["Board"].ToString();
                     view.SetTimeLimit(responseAsObject["TimeLimit"].ToString());
                     view.SetUpBoard(Board.ToString());
@@ -328,6 +342,7 @@ namespace PS9
                     dynamic player2 = JsonConvert.DeserializeObject(responseAsObject["Player2"].ToString());
 
                     ArePlayerOne = player1["Nickname"].ToString().Equals(Nickname);
+                    InAGame = true;
                 }
             }
             catch (Exception)
@@ -418,6 +433,7 @@ namespace PS9
             finally
             {
                 view.Reset();
+                
             }
 
         }
