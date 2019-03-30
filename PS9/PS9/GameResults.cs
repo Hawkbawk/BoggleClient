@@ -32,11 +32,11 @@ namespace PS9
 
             foreach(string s in P1_Words)
             {
-                richTextBox1.Text = s + "\r\n";
+                richTextBox1.Text += s + Environment.NewLine;
             }
             foreach (string s in P2_Words)
             {
-                richTextBox2.Text = s + "\r\n";
+                richTextBox2.Text += s + Environment.NewLine;
             }
         }
 
