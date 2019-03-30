@@ -362,9 +362,12 @@ namespace PS9
             }
             catch (Exception e)
             {
-                view.ShowErrorMessage("A server side error has occurred. Please try again.");
-                view.ShowErrorMessage(e.ToString());
-                view.EnableEnterGameButton(false);
+                if (e.Equals(typeof (TaskCanceledException)))
+                {
+                    view.ShowErrorMessage("A server side error has occurred. Please try again.");
+                    view.ShowErrorMessage(e.ToString());
+                    view.EnableEnterGameButton(false);
+                }
             }
             finally
             {
