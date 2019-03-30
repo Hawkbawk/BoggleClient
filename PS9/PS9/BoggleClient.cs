@@ -15,6 +15,7 @@ namespace PS9
             Cancel_Game_Button.Enabled = false;
             CancelRegister_Button.Enabled = false;
             Enter_Game_Button.Enabled = false;
+            ScoreBoard_Textbox.ReadOnly = true;
         }
 
         public event Action EnterGame;
@@ -38,7 +39,7 @@ namespace PS9
         {
             TimeLimit_Textbox.Text = timeLimit;
             Time_Limit_Label.Text = timeLimit;
-            Remaining_Time_Label.Text = timeLimit;           //Needs to be fixed to be with the server rather than with the local
+            Remaining_Time_Label.Text = timeLimit;          
         }
 
         public void SetRemainingTime(string remainingTime)
@@ -58,7 +59,11 @@ namespace PS9
 
         public void SetCurrentPlayedWords(List<string> words)
         {
-            throw new NotImplementedException();
+            ScoreBoard_Textbox.ResetText();
+            foreach(string word in words)
+            {
+                ScoreBoard_Textbox.Text += word + Environment.NewLine;
+            }
         }
 
         public void EnableTextBoxAndRegister(bool state)
