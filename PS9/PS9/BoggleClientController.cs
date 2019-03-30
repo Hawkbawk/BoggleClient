@@ -67,9 +67,13 @@ namespace PS9
                     }
                 }
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                view.ShowErrorMessage("A server side error has occurred. Please try again.");
+                if (!(e is TaskCanceledException))
+                {
+                    view.ShowErrorMessage("A server side error has occurred. Please try again.");
+                }
+                
             }
             finally
             {
@@ -106,9 +110,12 @@ namespace PS9
                     }
                 }
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                view.ShowErrorMessage("A server side error has occurred. Please try again.");
+                if (!(e is TaskCanceledException))
+                {
+                    view.ShowErrorMessage("A server side error has occurred. Please try again.");
+                }
             }
         }
 
@@ -158,7 +165,6 @@ namespace PS9
             }
             await JoinGame(desiredTime);
             await StartGame();
-            view.EnableControlsInGame(false);
         }
 
         private void HandleGetHelp()
@@ -187,7 +193,7 @@ namespace PS9
                 using (HttpClient client = CreateClient(DesiredServer))
                 {
                     tokenSource = new CancellationTokenSource();
-                    view.EnableControlsJoin(false);  //Stuff from Joe's Controller3
+                    view.EnableControlsJoin(false);
                     // Create a dynamic object that will be serialized.
                     dynamic body = new ExpandoObject();
                     body.UserToken = UserToken;
@@ -212,13 +218,16 @@ namespace PS9
                     GameID = responseBodyAsObject["GameID"];
                 }
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                view.ShowErrorMessage("Failed to join game.");
+                if (!(e is TaskCanceledException))
+                {
+                    view.ShowErrorMessage("A server side error has occurred. Please try again.");
+                }
             }
             finally
             {
-                view.EnableControlsJoin(true);
+                //view.EnableControlsJoin(true);
             }
         }
 
@@ -259,7 +268,10 @@ namespace PS9
             }
             catch (Exception e)
             {
-                view.ShowErrorMessage(e.ToString());
+                if (!(e is TaskCanceledException))
+                {
+                    view.ShowErrorMessage("A server side error has occurred. Please try again.");
+                }
             }
             finally
             {
@@ -314,7 +326,6 @@ namespace PS9
                 using (HttpClient client = CreateClient(DesiredServer))
                 {
                     tokenSource = new CancellationTokenSource();
-                    //view.EnableControls(false);
                     dynamic body = new ExpandoObject();
                     body.GameID = GameID;
                     StringContent content = new StringContent(JsonConvert.SerializeObject(body), Encoding.UTF8, "application/json");
@@ -345,9 +356,16 @@ namespace PS9
                     InAGame = true;
                 }
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                view.ShowErrorMessage("Failed to start game.");
+                if (!(e is TaskCanceledException))
+                {
+                    view.ShowErrorMessage("A server side error has occurred. Please try again.");
+                }
+            }
+            finally
+            {
+                view.EnableControlsInGame(true);
             }
         }
 
@@ -396,7 +414,10 @@ namespace PS9
             }
             catch (Exception e)
             {
-                view.ShowErrorMessage(e.ToString());
+                if (!(e is TaskCanceledException))
+                {
+                    view.ShowErrorMessage("A server side error has occurred. Please try again.");
+                }
             }
         }
 
@@ -434,6 +455,7 @@ namespace PS9
             }
             finally
             {
+                InAGame = false;
                 view.Reset();
                 
             }

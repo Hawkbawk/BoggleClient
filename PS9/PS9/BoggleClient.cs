@@ -43,7 +43,6 @@ namespace PS9
 
         public void SetTimeLimit(string timeLimit)
         {
-            TimeLimit_Textbox.Text = timeLimit;
             Time_Limit_Label.Text = timeLimit;
             Remaining_Time_Label.Text = timeLimit;          
         }
