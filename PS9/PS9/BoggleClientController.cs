@@ -168,7 +168,6 @@ namespace PS9
 
         private async Task StartGame()
         {
-            view.EnableControlsInGame(false);
             try
             {
                 using (HttpClient client = CreateClient(DesiredServer))
@@ -259,7 +258,49 @@ namespace PS9
 
         private void HandleSubmitWord(string obj)
         {
-            throw new NotImplementedException();
+            PlayWord(obj);
+        }
+
+
+        private async void PlayWord(string word)
+        {
+            try
+            {
+                using (HttpClient client = CreateClient(DesiredServer))
+                {
+                    tokenSource = new CancellationTokenSource();
+                    //view.EnableControlsJoin(false);  //Stuff from Joe's Controller3
+                    // Create a dynamic object that will be serialized.
+                    dynamic body = new ExpandoObject();
+                    body.UserToken = UserToken;
+                    body.Word = word;
+
+                    // Serialize the body and create the URI
+                    StringContent content = new StringContent(JsonConvert.SerializeObject(body), Encoding.UTF8, "application/json");
+                    string gamesURI = DesiredServer + "/BoggleService/games/"+GameID;
+                    HttpResponseMessage response = await client.PutAsync(gamesURI, content, tokenSource.Token);
+
+                    // Tell the user if there are any problems with their input.
+                    if (response.StatusCode.Equals(403))
+                    {
+                        throw new Exception("The Word is null, empty, or longer than 30 characters OR gameID or UserToken is invalid OR if UserToken is not a player in the game identified by gameID.");
+                    }
+                    else if (response.StatusCode.Equals(409))
+                    {
+                        throw new Exception("Game is not Active!");
+                    }
+
+                }
+            }catch(Exception e)
+            {
+                view.ShowErrorMessage(e.ToString());
+            }
+            finally
+            {
+                //view.EnableControls(false);  //Stuff from Joe's Controller3
+            }
+
+
         }
 
         private void HandleCancelGame()
@@ -321,9 +362,12 @@ namespace PS9
             }
             catch (Exception e)
             {
-                view.ShowErrorMessage("A server side error has occurred. Please try again.");
-                view.ShowErrorMessage(e.ToString());
-                view.EnableEnterGameButton(false);
+                if (e.Equals(typeof (TaskCanceledException)))
+                {
+                    view.ShowErrorMessage("A server side error has occurred. Please try again.");
+                    view.ShowErrorMessage(e.ToString());
+                    view.EnableEnterGameButton(false);
+                }
             }
             finally
             {

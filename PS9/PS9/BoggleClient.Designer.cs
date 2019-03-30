@@ -75,16 +75,18 @@
             // 
             // Word_Textbox
             // 
-            this.Word_Textbox.Location = new System.Drawing.Point(63, 514);
-            this.Word_Textbox.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.Word_Textbox.Location = new System.Drawing.Point(57, 350);
+            this.Word_Textbox.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.Word_Textbox.Name = "Word_Textbox";
             this.Word_Textbox.Size = new System.Drawing.Size(431, 22);
             this.Word_Textbox.TabIndex = 0;
+            this.Word_Textbox.KeyDown += new System.Windows.Forms.KeyEventHandler(this.Word_Textbox_KeyDown);
             // 
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(13, 518);
+            this.label1.Location = new System.Drawing.Point(20, 353);
+            this.label1.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(46, 17);
             this.label1.TabIndex = 1;
@@ -92,18 +94,20 @@
             // 
             // Enter_Button
             // 
-            this.Enter_Button.Location = new System.Drawing.Point(507, 514);
-            this.Enter_Button.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.Enter_Button.Location = new System.Drawing.Point(390, 350);
+            this.Enter_Button.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.Enter_Button.Name = "Enter_Button";
             this.Enter_Button.Size = new System.Drawing.Size(77, 25);
             this.Enter_Button.TabIndex = 2;
             this.Enter_Button.Text = "Enter";
             this.Enter_Button.UseVisualStyleBackColor = true;
+            this.Enter_Button.Click += new System.EventHandler(this.Enter_Button_Click);
             // 
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(377, 187);
+            this.label2.Location = new System.Drawing.Point(336, 102);
+            this.label2.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(114, 17);
             this.label2.TabIndex = 19;
@@ -112,7 +116,8 @@
             // Remaining_Time_Label
             // 
             this.Remaining_Time_Label.AutoSize = true;
-            this.Remaining_Time_Label.Location = new System.Drawing.Point(497, 187);
+            this.Remaining_Time_Label.Location = new System.Drawing.Point(426, 102);
+            this.Remaining_Time_Label.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.Remaining_Time_Label.Name = "Remaining_Time_Label";
             this.Remaining_Time_Label.Size = new System.Drawing.Size(16, 17);
             this.Remaining_Time_Label.TabIndex = 20;
@@ -121,7 +126,8 @@
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(359, 203);
+            this.label4.Location = new System.Drawing.Point(322, 115);
+            this.label4.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(134, 17);
             this.label4.TabIndex = 21;
@@ -130,7 +136,8 @@
             // Player_CurrentScore_Label
             // 
             this.Player_CurrentScore_Label.AutoSize = true;
-            this.Player_CurrentScore_Label.Location = new System.Drawing.Point(496, 206);
+            this.Player_CurrentScore_Label.Location = new System.Drawing.Point(425, 117);
+            this.Player_CurrentScore_Label.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.Player_CurrentScore_Label.Name = "Player_CurrentScore_Label";
             this.Player_CurrentScore_Label.Size = new System.Drawing.Size(16, 17);
             this.Player_CurrentScore_Label.TabIndex = 22;
@@ -139,7 +146,8 @@
             // label6
             // 
             this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(316, 223);
+            this.label6.Location = new System.Drawing.Point(290, 131);
+            this.label6.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(177, 17);
             this.label6.TabIndex = 23;
@@ -148,7 +156,8 @@
             // Opponent_CurrentScore_Label
             // 
             this.Opponent_CurrentScore_Label.AutoSize = true;
-            this.Opponent_CurrentScore_Label.Location = new System.Drawing.Point(496, 223);
+            this.Opponent_CurrentScore_Label.Location = new System.Drawing.Point(425, 131);
+            this.Opponent_CurrentScore_Label.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.Opponent_CurrentScore_Label.Name = "Opponent_CurrentScore_Label";
             this.Opponent_CurrentScore_Label.Size = new System.Drawing.Size(16, 17);
             this.Opponent_CurrentScore_Label.TabIndex = 24;
@@ -157,7 +166,8 @@
             // label8
             // 
             this.label8.AutoSize = true;
-            this.label8.Location = new System.Drawing.Point(416, 169);
+            this.label8.Location = new System.Drawing.Point(365, 87);
+            this.label8.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label8.Name = "label8";
             this.label8.Size = new System.Drawing.Size(76, 17);
             this.label8.TabIndex = 25;
@@ -166,7 +176,8 @@
             // Time_Limit_Label
             // 
             this.Time_Limit_Label.AutoSize = true;
-            this.Time_Limit_Label.Location = new System.Drawing.Point(496, 169);
+            this.Time_Limit_Label.Location = new System.Drawing.Point(425, 87);
+            this.Time_Limit_Label.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.Time_Limit_Label.Name = "Time_Limit_Label";
             this.Time_Limit_Label.Size = new System.Drawing.Size(16, 17);
             this.Time_Limit_Label.TabIndex = 26;
@@ -174,19 +185,20 @@
             // 
             // ScoreBoard_Textbox
             // 
-            this.ScoreBoard_Textbox.Location = new System.Drawing.Point(340, 295);
-            this.ScoreBoard_Textbox.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.ScoreBoard_Textbox.Location = new System.Drawing.Point(265, 172);
+            this.ScoreBoard_Textbox.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.ScoreBoard_Textbox.Name = "ScoreBoard_Textbox";
             this.ScoreBoard_Textbox.ReadOnly = true;
             this.ScoreBoard_Textbox.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.Vertical;
-            this.ScoreBoard_Textbox.Size = new System.Drawing.Size(196, 106);
+            this.ScoreBoard_Textbox.Size = new System.Drawing.Size(215, 164);
             this.ScoreBoard_Textbox.TabIndex = 27;
             this.ScoreBoard_Textbox.Text = "";
             // 
             // label10
             // 
             this.label10.AutoSize = true;
-            this.label10.Location = new System.Drawing.Point(388, 274);
+            this.label10.Location = new System.Drawing.Point(336, 157);
+            this.label10.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label10.Name = "label10";
             this.label10.Size = new System.Drawing.Size(104, 17);
             this.label10.TabIndex = 28;
@@ -231,8 +243,7 @@
             // label13
             // 
             this.label13.AutoSize = true;
-            this.label13.Location = new System.Drawing.Point(25, 122);
-            this.label13.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label13.Location = new System.Drawing.Point(56, 102);
             this.label13.Name = "label13";
             this.label13.Size = new System.Drawing.Size(151, 17);
             this.label13.TabIndex = 35;
@@ -241,8 +252,7 @@
             // label14
             // 
             this.label14.AutoSize = true;
-            this.label14.Location = new System.Drawing.Point(240, 122);
-            this.label14.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label14.Location = new System.Drawing.Point(204, 102);
             this.label14.Name = "label14";
             this.label14.Size = new System.Drawing.Size(24, 17);
             this.label14.TabIndex = 36;
@@ -250,8 +260,8 @@
             // 
             // Enter_Game_Button
             // 
-            this.Enter_Game_Button.Location = new System.Drawing.Point(537, 10);
-            this.Enter_Game_Button.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.Enter_Game_Button.Location = new System.Drawing.Point(294, 32);
+            this.Enter_Game_Button.Margin = new System.Windows.Forms.Padding(2);
             this.Enter_Game_Button.Name = "Enter_Game_Button";
             this.Enter_Game_Button.Size = new System.Drawing.Size(121, 25);
             this.Enter_Game_Button.TabIndex = 38;
@@ -261,8 +271,8 @@
             // 
             // Cancel_Game_Button
             // 
-            this.Cancel_Game_Button.Location = new System.Drawing.Point(392, 9);
-            this.Cancel_Game_Button.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.Cancel_Game_Button.Location = new System.Drawing.Point(389, 30);
+            this.Cancel_Game_Button.Margin = new System.Windows.Forms.Padding(2);
             this.Cancel_Game_Button.Name = "Cancel_Game_Button";
             this.Cancel_Game_Button.Size = new System.Drawing.Size(121, 25);
             this.Cancel_Game_Button.TabIndex = 39;
@@ -275,8 +285,8 @@
             this.Field0.BackColor = System.Drawing.SystemColors.Control;
             this.Field0.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Field0.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.Field0.Location = new System.Drawing.Point(47, 169);
-            this.Field0.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.Field0.Location = new System.Drawing.Point(59, 140);
+            this.Field0.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.Field0.Name = "Field0";
             this.Field0.Size = new System.Drawing.Size(51, 50);
             this.Field0.TabIndex = 40;
@@ -288,8 +298,8 @@
             this.Field1.BackColor = System.Drawing.SystemColors.Control;
             this.Field1.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Field1.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.Field1.Location = new System.Drawing.Point(103, 169);
-            this.Field1.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.Field1.Location = new System.Drawing.Point(101, 140);
+            this.Field1.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.Field1.Name = "Field1";
             this.Field1.Size = new System.Drawing.Size(51, 50);
             this.Field1.TabIndex = 41;
@@ -301,8 +311,8 @@
             this.Field2.BackColor = System.Drawing.SystemColors.Control;
             this.Field2.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Field2.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.Field2.Location = new System.Drawing.Point(159, 169);
-            this.Field2.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.Field2.Location = new System.Drawing.Point(143, 140);
+            this.Field2.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.Field2.Name = "Field2";
             this.Field2.Size = new System.Drawing.Size(51, 50);
             this.Field2.TabIndex = 42;
@@ -314,8 +324,8 @@
             this.Field3.BackColor = System.Drawing.SystemColors.Control;
             this.Field3.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Field3.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.Field3.Location = new System.Drawing.Point(215, 169);
-            this.Field3.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.Field3.Location = new System.Drawing.Point(185, 140);
+            this.Field3.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.Field3.Name = "Field3";
             this.Field3.Size = new System.Drawing.Size(51, 50);
             this.Field3.TabIndex = 43;
@@ -327,8 +337,8 @@
             this.Field7.BackColor = System.Drawing.SystemColors.Control;
             this.Field7.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Field7.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.Field7.Location = new System.Drawing.Point(215, 225);
-            this.Field7.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.Field7.Location = new System.Drawing.Point(185, 186);
+            this.Field7.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.Field7.Name = "Field7";
             this.Field7.Size = new System.Drawing.Size(51, 50);
             this.Field7.TabIndex = 47;
@@ -340,8 +350,8 @@
             this.Field6.BackColor = System.Drawing.SystemColors.Control;
             this.Field6.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Field6.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.Field6.Location = new System.Drawing.Point(159, 225);
-            this.Field6.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.Field6.Location = new System.Drawing.Point(143, 186);
+            this.Field6.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.Field6.Name = "Field6";
             this.Field6.Size = new System.Drawing.Size(51, 50);
             this.Field6.TabIndex = 46;
@@ -353,8 +363,8 @@
             this.Field5.BackColor = System.Drawing.SystemColors.Control;
             this.Field5.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Field5.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.Field5.Location = new System.Drawing.Point(103, 225);
-            this.Field5.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.Field5.Location = new System.Drawing.Point(101, 186);
+            this.Field5.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.Field5.Name = "Field5";
             this.Field5.Size = new System.Drawing.Size(51, 50);
             this.Field5.TabIndex = 45;
@@ -366,8 +376,8 @@
             this.Field4.BackColor = System.Drawing.SystemColors.Control;
             this.Field4.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Field4.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.Field4.Location = new System.Drawing.Point(47, 225);
-            this.Field4.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.Field4.Location = new System.Drawing.Point(59, 186);
+            this.Field4.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.Field4.Name = "Field4";
             this.Field4.Size = new System.Drawing.Size(51, 50);
             this.Field4.TabIndex = 44;
@@ -379,8 +389,8 @@
             this.Field11.BackColor = System.Drawing.SystemColors.Control;
             this.Field11.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Field11.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.Field11.Location = new System.Drawing.Point(215, 281);
-            this.Field11.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.Field11.Location = new System.Drawing.Point(185, 231);
+            this.Field11.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.Field11.Name = "Field11";
             this.Field11.Size = new System.Drawing.Size(51, 50);
             this.Field11.TabIndex = 51;
@@ -392,8 +402,8 @@
             this.Field10.BackColor = System.Drawing.SystemColors.Control;
             this.Field10.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Field10.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.Field10.Location = new System.Drawing.Point(159, 281);
-            this.Field10.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.Field10.Location = new System.Drawing.Point(143, 231);
+            this.Field10.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.Field10.Name = "Field10";
             this.Field10.Size = new System.Drawing.Size(51, 50);
             this.Field10.TabIndex = 50;
@@ -405,8 +415,8 @@
             this.Field9.BackColor = System.Drawing.SystemColors.Control;
             this.Field9.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Field9.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.Field9.Location = new System.Drawing.Point(103, 281);
-            this.Field9.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.Field9.Location = new System.Drawing.Point(101, 231);
+            this.Field9.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.Field9.Name = "Field9";
             this.Field9.Size = new System.Drawing.Size(51, 50);
             this.Field9.TabIndex = 49;
@@ -418,8 +428,8 @@
             this.Field8.BackColor = System.Drawing.SystemColors.Control;
             this.Field8.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Field8.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.Field8.Location = new System.Drawing.Point(47, 281);
-            this.Field8.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.Field8.Location = new System.Drawing.Point(59, 231);
+            this.Field8.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.Field8.Name = "Field8";
             this.Field8.Size = new System.Drawing.Size(51, 50);
             this.Field8.TabIndex = 48;
@@ -431,8 +441,8 @@
             this.Field15.BackColor = System.Drawing.SystemColors.Control;
             this.Field15.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Field15.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.Field15.Location = new System.Drawing.Point(215, 337);
-            this.Field15.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.Field15.Location = new System.Drawing.Point(185, 277);
+            this.Field15.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.Field15.Name = "Field15";
             this.Field15.Size = new System.Drawing.Size(51, 50);
             this.Field15.TabIndex = 55;
@@ -444,8 +454,8 @@
             this.Field14.BackColor = System.Drawing.SystemColors.Control;
             this.Field14.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Field14.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.Field14.Location = new System.Drawing.Point(159, 337);
-            this.Field14.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.Field14.Location = new System.Drawing.Point(143, 277);
+            this.Field14.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.Field14.Name = "Field14";
             this.Field14.Size = new System.Drawing.Size(51, 50);
             this.Field14.TabIndex = 54;
@@ -457,8 +467,8 @@
             this.Field13.BackColor = System.Drawing.SystemColors.Control;
             this.Field13.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Field13.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.Field13.Location = new System.Drawing.Point(103, 337);
-            this.Field13.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.Field13.Location = new System.Drawing.Point(101, 277);
+            this.Field13.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.Field13.Name = "Field13";
             this.Field13.Size = new System.Drawing.Size(51, 50);
             this.Field13.TabIndex = 53;
@@ -470,8 +480,8 @@
             this.Field12.BackColor = System.Drawing.SystemColors.Control;
             this.Field12.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Field12.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.Field12.Location = new System.Drawing.Point(47, 337);
-            this.Field12.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.Field12.Location = new System.Drawing.Point(59, 277);
+            this.Field12.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.Field12.Name = "Field12";
             this.Field12.Size = new System.Drawing.Size(51, 50);
             this.Field12.TabIndex = 52;
@@ -498,8 +508,8 @@
             // 
             // RegisterUser_Button
             // 
-            this.RegisterUser_Button.Location = new System.Drawing.Point(537, 34);
-            this.RegisterUser_Button.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.RegisterUser_Button.Location = new System.Drawing.Point(295, 7);
+            this.RegisterUser_Button.Margin = new System.Windows.Forms.Padding(2);
             this.RegisterUser_Button.Name = "RegisterUser_Button";
             this.RegisterUser_Button.Size = new System.Drawing.Size(121, 25);
             this.RegisterUser_Button.TabIndex = 58;
@@ -509,8 +519,8 @@
             // 
             // CancelRegister_Button
             // 
-            this.CancelRegister_Button.Location = new System.Drawing.Point(392, 33);
-            this.CancelRegister_Button.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.CancelRegister_Button.Location = new System.Drawing.Point(389, 8);
+            this.CancelRegister_Button.Margin = new System.Windows.Forms.Padding(2);
             this.CancelRegister_Button.Name = "CancelRegister_Button";
             this.CancelRegister_Button.Size = new System.Drawing.Size(121, 25);
             this.CancelRegister_Button.TabIndex = 59;
@@ -526,7 +536,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(715, 564);
+            this.ClientSize = new System.Drawing.Size(504, 387);
             this.Controls.Add(this.CancelRegister_Button);
             this.Controls.Add(this.RegisterUser_Button);
             this.Controls.Add(this.TimeLimit_Textbox);
