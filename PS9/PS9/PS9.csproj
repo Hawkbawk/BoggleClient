@@ -57,11 +57,20 @@
     </Compile>
     <Compile Include="BoggleClientContext.cs" />
     <Compile Include="BoggleClientController.cs" />
+    <Compile Include="GameResults.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="GameResults.Designer.cs">
+      <DependentUpon>GameResults.cs</DependentUpon>
+    </Compile>
     <Compile Include="IBoggleService.cs" />
     <Compile Include="Launch.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="BoggleClient.resx">
       <DependentUpon>BoggleClient.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GameResults.resx">
+      <DependentUpon>GameResults.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

@@ -23,6 +23,8 @@ namespace PS9
         private string Board { get; set; }
         private bool GameCompleted { get; set; }
 
+        private GameResults gr;
+
         public BoggleClientController(IBoggleService _view)
         {
             view = _view;
@@ -32,6 +34,15 @@ namespace PS9
             view.SubmitWord += HandleSubmitWord;
             view.CancelRegister += HandleCancelRegister;
             view.RegisterUser += HandleRegisterUser;
+            view.GetHelp += HandleGetHelp;
+        }
+
+        private void HandleGetHelp()
+        {
+            view.ShowErrorMessage("The Rules of Boggle can be found here: http://en.wikipedia.org/wiki/Boggle. " +
+                "With this client, all you need to do is make a username of your choice, connect it to a server of your choice, and enter in your desired time limit. " +
+                "Once you have all the fields filled in, click the register button, and then join when it is possible. Once you are in a game, all you need to do is type in words you" +
+                "found from the interface into the textbox on the bottom and submit the word by clicking enter.");
         }
 
         private void HandleRegisterUser()
@@ -298,22 +309,30 @@ namespace PS9
                     StringContent content = new StringContent(JsonConvert.SerializeObject(username), Encoding.UTF8, "application/json");
                     string usersURI = DesiredServer + "/BoggleService/users";
                     HttpResponseMessage response = await client.PostAsync(usersURI, content, tokenSource.Token);
+                    if (username.Equals("") || username.Equals("@"))
+                    {
+                        throw new ArgumentNullException("You've given an invalid name!");
+                    }
                     if (response.StatusCode.Equals(403))
                     {
                         throw new Exception("You've given an invalid name!");
                     }
                     username = await response.Content.ReadAsStringAsync();
                     UserToken = (string)JsonConvert.DeserializeObject(username);
+                    view.EnableEnterGameButton(true);
                 }
 
             }
             catch (Exception)
             {
                 view.ShowErrorMessage("A server side error has occurred. Please try again.");
+                view.ShowErrorMessage(e.ToString());
+                view.EnableEnterGameButton(false);
             }
             finally
             {
                 view.EnableControlsRegister(true);
+                
             }
 
         }

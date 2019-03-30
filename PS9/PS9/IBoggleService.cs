@@ -13,6 +13,7 @@ namespace PS9
         event Action CancelRegister;
         event Action CancelGame;
         event Action<string> SubmitWord;
+        event Action GetHelp;
 
         string ObtainUsername();
 
@@ -31,6 +32,8 @@ namespace PS9
 
         void EnableControlsRegister(bool state);
 
+        void EnableEnterGameButton(bool state);
+
         void EnableControlsJoin(bool state);
 
         void EnableControlsInGame(bool state);
@@ -39,5 +42,6 @@ namespace PS9
 
         void SetUpBoard(string boardContents);
 
+        void EnableTextBoxAndRegister(bool state);
     }
 }
