@@ -193,11 +193,12 @@ namespace PS9
                     HttpResponseMessage response = await client.PostAsync(usersURI, content, tokenSource.Token);
 
                     // Tell the user if there are any problems with their input.
-                    if (response.StatusCode.Equals(403))
+                    // TODO This doesn't actually work for some reason. Fix it.
+                    if (response.StatusCode.Equals())
                     {
                         throw new Exception("You've given an invalid name/time limit!!");
                     }
-                    else if (response.StatusCode.Equals(409))
+                    else if (response.StatusCode.Equals(HttpStatus))
                     {
                         throw new Exception("A player with the same username as you is already in the pending game!");
                     }
@@ -322,6 +323,7 @@ namespace PS9
                     Board = responseAsObject["Board"].ToString();
                     view.SetTimeLimit(responseAsObject["TimeLimit"].ToString());
                     view.SetUpBoard(Board.ToString());
+                    view.EnableTimer(true);
                     dynamic player1 = JsonConvert.DeserializeObject(responseAsObject["Player1"].ToString());
                     dynamic player2 = JsonConvert.DeserializeObject(responseAsObject["Player2"].ToString());
 
@@ -406,6 +408,7 @@ namespace PS9
 
                     gr = new GameResults();
                     gr.ChangeLabels(player1.Nickname, player2.Nickname, player1.Score.ToString(), player2.Score.ToString(), player1.WordsPlayed, player2.WordsPlayed);
+                    view.EnableTimer(false);
                     gr.Show();
 
                 }
@@ -413,6 +416,10 @@ namespace PS9
             catch (Exception e)
             {
                 view.ShowErrorMessage(e.ToString());
+            }
+            finally
+            {
+                view.Reset();
             }
 
         }

@@ -97,8 +97,8 @@ namespace PS9
         public void EnableControlsInGame(bool state)
         {
             EnableTextBoxAndRegister(state);
-            EnableEnterGameButton(state);
-            Cancel_Game_Button.Enabled = !state;
+            EnableEnterGameButton(!state);
+            Cancel_Game_Button.Enabled = state;
         }
 
 
@@ -171,7 +171,6 @@ namespace PS9
             Field13.Text = board[13];
             Field14.Text = board[14];
             Field15.Text = board[15];
-            UpdateProperty_Timer.Enabled = true;
         }
 
         private void Help_Button_Clicked(object sender, System.ComponentModel.CancelEventArgs e)
@@ -196,6 +195,40 @@ namespace PS9
         public void SetOpponentNickname(string nickname)
         {
             Opponent_Nickname.Text = nickname;
+        }
+
+        public void EnableTimer(bool state)
+        {
+            UpdateProperty_Timer.Enabled = state;
+        }
+
+        public void Reset()
+        {
+            // Reset the board.
+            Field0.Text = "";
+            Field1.Text = "";
+            Field2.Text = "";
+            Field3.Text = "";
+            Field4.Text = "";
+            Field5.Text = "";
+            Field6.Text = "";
+            Field7.Text = "";
+            Field8.Text = "";
+            Field9.Text = "";
+            Field10.Text = "";
+            Field11.Text = "";
+            Field12.Text = "";
+            Field13.Text = "";
+            Field14.Text = "";
+            Field15.Text = "";
+
+            // Enable and disable the appropriate controls.
+            ServerName_Textbox.Text = "http://ice.eng.utah.edu";
+            RegisterUser_Button.Enabled = true;
+            Cancel_Game_Button.Enabled = false;
+            CancelRegister_Button.Enabled = false;
+            Enter_Game_Button.Enabled = false;
+            ScoreBoard_Textbox.ReadOnly = true;
         }
     }
 }

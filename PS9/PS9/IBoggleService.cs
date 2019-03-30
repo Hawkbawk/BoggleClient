@@ -47,5 +47,8 @@ namespace PS9
         void EnableTextBoxAndRegister(bool state);
 
         void SetOpponentNickname(string nickname);
+        void EnableTimer(bool state);
+
+        void Reset();
     }
 }
