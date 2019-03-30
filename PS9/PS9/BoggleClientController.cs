@@ -56,15 +56,15 @@ namespace PS9
             tokenSource.Cancel();
         }
 
-        private void HandleEnterGame()
+        private async void HandleEnterGame()
         {
-            view.SetOpponentScore(0);
-            view.SetPlayerScore(0);
-            JoinGame(view.GetDesiredTime());
-            StartGame();
+            view.SetOpponentScore("0");
+            view.SetPlayerScore("0");
+            await JoinGame(view.GetDesiredTime());
+            await StartGame();
         }
 
-        private async void CheckGameStatus()
+        private async Task CheckGameStatus()
         {
             try
             {
@@ -99,7 +99,7 @@ namespace PS9
             }
         }
 
-        private async void StartGame()
+        private async Task StartGame()
         {
             view.EnableControlsInGame(false);
             try
@@ -117,10 +117,14 @@ namespace PS9
                     HttpResponseMessage response = await client.GetAsync(gamesURI, tokenSource.Token);
                     string responseAsString = await response.Content.ReadAsStringAsync();
                     dynamic responseAsObject = JsonConvert.DeserializeObject(responseAsString);
-
+                    if (responseAsObject["GameState"].ToString().Equals("pending"))
+                    {
+                        await CheckGameStatus();
+                    }
                     Board = responseAsObject["Board"].ToString();
-                    view.SetTimeLimit(responseAsObject["TimeLimit"]);
-                    view.SetUpBoard(Board);
+                    Board = finalBoard.ToString();
+                    view.SetTimeLimit(responseAsObject["TimeLimit"].ToString());
+                    view.SetUpBoard(Board.ToString());
                     dynamic player1 = JsonConvert.DeserializeObject(responseAsObject["Player1"].ToString());
                     dynamic player2 = JsonConvert.DeserializeObject(responseAsObject["Player2"].ToString());
 
@@ -192,7 +196,7 @@ namespace PS9
             }
         }
 
-        private async void JoinGame(int TimeLimit)
+        private async Task JoinGame(int TimeLimit)
         {
             try
             {
@@ -225,13 +229,6 @@ namespace PS9
                     string responseBodyAsString = await response.Content.ReadAsStringAsync();
                     dynamic responseBodyAsObject = JsonConvert.DeserializeObject(responseBodyAsString);
                     GameID = responseBodyAsObject["GameID"];
-                    if ((bool)responseBodyAsObject["IsPending"])
-                    {
-                        CheckGameStatus();
-
-                    }
-                    return;
-
                 }
 
             }
@@ -323,7 +320,7 @@ namespace PS9
                 }
 
             }
-            catch (Exception)
+            catch (Exception e)
             {
                 view.ShowErrorMessage("A server side error has occurred. Please try again.");
                 view.ShowErrorMessage(e.ToString());

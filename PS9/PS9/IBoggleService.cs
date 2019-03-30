@@ -19,14 +19,14 @@ namespace PS9
 
         string ObtainDesiredServer();
 
-        void SetTimeLimit(int timeLimit);
+        void SetTimeLimit(string timeLimit);
 
         int GetDesiredTime();
-        void SetRemainingTime(int remainingTime);
+        void SetRemainingTime(string remainingTime);
 
-        void SetPlayerScore(int score);
+        void SetPlayerScore(string score);
 
-        void SetOpponentScore(int oppScore);
+        void SetOpponentScore(string oppScore);
 
         void SetCurrentPlayedWords(List<string> words);
 

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Text;
 using System.Windows.Forms;
 
 namespace PS9
@@ -33,26 +34,26 @@ namespace PS9
             return ServerName_Textbox.Text;
         }
 
-        public void SetTimeLimit(int timeLimit)
+        public void SetTimeLimit(string timeLimit)
         {
-            TimeLimit_Textbox.Text = timeLimit.ToString();
-            Time_Limit_Label.Text = timeLimit.ToString();
-            Remaining_Time_Label.Text = timeLimit.ToString();           //Needs to be fixed to be with the server rather than with the local
+            TimeLimit_Textbox.Text = timeLimit;
+            Time_Limit_Label.Text = timeLimit;
+            Remaining_Time_Label.Text = timeLimit;           //Needs to be fixed to be with the server rather than with the local
         }
 
-        public void SetRemainingTime(int remainingTime)
+        public void SetRemainingTime(string remainingTime)
         {
-            Remaining_Time_Label.Text = remainingTime.ToString();
+            Remaining_Time_Label.Text = remainingTime;
         }
 
-        public void SetPlayerScore(int score)
+        public void SetPlayerScore(string score)
         {
-            Player_CurrentScore_Label.Text = score.ToString();
+            Player_CurrentScore_Label.Text = score;
         }
 
-        public void SetOpponentScore(int oppScore)
+        public void SetOpponentScore(string oppScore)
         {
-            Opponent_CurrentScore_Label.Text = oppScore.ToString();
+            Opponent_CurrentScore_Label.Text = oppScore;
         }
 
         public void SetCurrentPlayedWords(List<string> words)
@@ -140,7 +141,34 @@ namespace PS9
 
         public void SetUpBoard(string boardContents)
         {
-            throw new NotImplementedException();
+            List<string> board = new List<string>();
+            foreach(char c in boardContents)
+            {
+                if (c == 'Q')
+                {
+                    board.Add(c + "U");
+                }
+                else
+                {
+                    board.Add(c.ToString());
+                }
+            }
+            Field0.Text = board[0];
+            Field1.Text = board[1];
+            Field2.Text = board[2];
+            Field3.Text = board[3];
+            Field4.Text = board[4];
+            Field5.Text = board[5];
+            Field6.Text = board[6];
+            Field7.Text = board[7];
+            Field8.Text = board[8];
+            Field9.Text = board[9];
+            Field10.Text = board[10];
+            Field11.Text = board[11];
+            Field12.Text = board[12];
+            Field13.Text = board[13];
+            Field14.Text = board[14];
+            Field15.Text = board[15];
         }
 
         private void Help_Button_Clicked(object sender, System.ComponentModel.CancelEventArgs e)
