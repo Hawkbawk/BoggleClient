@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace PS9
 {
-    class BoggleClientController
+    internal class BoggleClientController
     {
         private IBoggleService view;
         private CancellationTokenSource tokenSource;
@@ -22,6 +22,7 @@ namespace PS9
         private string GameID { get; set; }
         private string Board { get; set; }
         private bool GameCompleted { get; set; }
+        private bool ArePlayerOne { get; set; }
 
         private GameResults gr;
 
@@ -35,6 +36,58 @@ namespace PS9
             view.CancelRegister += HandleCancelRegister;
             view.RegisterUser += HandleRegisterUser;
             view.GetHelp += HandleGetHelp;
+            view.UpdateProperties += UpdateBoard;
+        }
+
+        private async void UpdateBoard()
+        {
+            try
+            {
+                using (HttpClient client = CreateClient(DesiredServer))
+                {
+                    // Setup the stuff necessary to query the server.
+                    tokenSource = new CancellationTokenSource();
+                    dynamic body = new ExpandoObject();
+                    body.GameID = GameID;
+                    StringContent content = new StringContent(JsonConvert.SerializeObject(body), Encoding.UTF8, "application/json");
+                    string gamesURI = DesiredServer + "/BoggleService/games/" + GameID + "/true";
+                    // Check the server every second until the game is completed.
+                    // Query the server
+                    HttpResponseMessage response = await client.GetAsync(gamesURI, tokenSource.Token);
+                    string responseAsString = await response.Content.ReadAsStringAsync();
+                    dynamic responseAsObject = JsonConvert.DeserializeObject(responseAsString);
+
+                    // Parse the input and update the GameState
+                    if (responseAsObject["GameState"].ToString().Equals("completed"))
+                    {
+                        GameCompleted = true;
+                    }
+                    // Update the TimeLeft
+
+                    view.SetRemainingTime(responseAsObject["TimeLeft"].ToString());
+
+                    // Figure out which player we are and grab their info.
+                    dynamic currentPlayer = new ExpandoObject();
+                    if (ArePlayerOne)
+                    {
+                        currentPlayer = responseAsObject["Player1"];
+                    }
+                    else
+                    {
+                        currentPlayer = responseAsObject["Player2"];
+                    }
+
+                    // Convert the JSON to a list of strings.
+                    List<string> words = ConvertJSONToList(JsonConvert.SerializeObject(currentPlayer["WordsPlayed"]));
+
+                    view.SetCurrentPlayedWords(words);
+
+                }
+            }
+            catch (Exception)
+            {
+                view.ShowErrorMessage("A server side issue has occurred");
+            }
         }
 
         private void HandleGetHelp()
@@ -60,7 +113,24 @@ namespace PS9
         {
             view.SetOpponentScore("0");
             view.SetPlayerScore("0");
-            await JoinGame(view.GetDesiredTime());
+            int desiredTime = 0;
+            try
+            {
+                desiredTime = view.GetDesiredTime();
+            }
+            catch (Exception e)
+            {
+                if (e is ArgumentOutOfRangeException)
+                {
+                    view.ShowErrorMessage("Your time limit must be greater than or equal to 5 and less than or equal to 120.");
+                }
+                else
+                {
+                    view.ShowErrorMessage("Your time limit isn't an integer.");
+                }
+                return;
+            }
+            await JoinGame(desiredTime);
             await StartGame();
         }
 
@@ -87,10 +157,7 @@ namespace PS9
                         {
                             isPending = false;
                         }
-
                     }
-
-
                 }
             }
             catch (Exception)
@@ -122,77 +189,17 @@ namespace PS9
                         await CheckGameStatus();
                     }
                     Board = responseAsObject["Board"].ToString();
-                    Board = finalBoard.ToString();
                     view.SetTimeLimit(responseAsObject["TimeLimit"].ToString());
                     view.SetUpBoard(Board.ToString());
                     dynamic player1 = JsonConvert.DeserializeObject(responseAsObject["Player1"].ToString());
                     dynamic player2 = JsonConvert.DeserializeObject(responseAsObject["Player2"].ToString());
 
-                    bool ArePlayerOne = player1["Nickname"].ToString().Equals(Nickname);
-
-                    Task updateBoard = Task.Run(() => UpdateBoard(ArePlayerOne));
-
-
+                    ArePlayerOne = player1["Nickname"].ToString().Equals(Nickname);
                 }
             }
             catch (Exception)
             {
                 view.ShowErrorMessage("Failed to start game.");
-            }
-        }
-
-        private async void UpdateBoard(bool ArePlayerOne)
-        {
-            try
-            {
-                using (HttpClient client = CreateClient(DesiredServer))
-                {
-                    // Setup the stuff necessary to query the server.
-                    tokenSource = new CancellationTokenSource();
-                    dynamic body = new ExpandoObject();
-                    body.GameID = GameID;
-                    StringContent content = new StringContent(JsonConvert.SerializeObject(body), Encoding.UTF8, "application/json");
-                    string gamesURI = DesiredServer + "/BoggleService/games/" + GameID + "/true";
-                    // Check the server every second until the game is completed.
-                    while (!GameCompleted)
-                    {
-                        // Query the server
-                        HttpResponseMessage response = await client.GetAsync(gamesURI, tokenSource.Token);
-                        string responseAsString = await response.Content.ReadAsStringAsync();
-                        dynamic responseAsObject = JsonConvert.DeserializeObject(responseAsString);
-
-                        // Parse the input and update the GameState
-                        if (responseAsObject["GameState"].ToString().Equals("completed"))
-                        {
-                            GameCompleted = true;
-                        }
-                        // Update the TimeLeft
-                        view.SetRemainingTime(responseAsObject["TimeLeft".ToString()]);
-
-                        // Figure out which player we are and grab their info.
-                        dynamic currentPlayer = new ExpandoObject();
-                        if(ArePlayerOne)
-                        {
-                            currentPlayer = responseAsObject["Player1"];
-                        } else
-                        {
-                            currentPlayer = responseAsObject["Player2"];
-                        }
-
-                        // Convert the JSON to a list of strings.
-                        List<string> words = ConvertJSONToList(JsonConvert.SerializeObject(currentPlayer["WordsPlayed"]));
-
-                        view.SetCurrentPlayedWords(words);
-
-
-                        Thread.Sleep(1000);
-                    }
-
-                }
-            }
-            catch (Exception)
-            {
-                view.ShowErrorMessage("Threading issues my dude.");
             }
         }
 
@@ -230,7 +237,6 @@ namespace PS9
                     dynamic responseBodyAsObject = JsonConvert.DeserializeObject(responseBodyAsString);
                     GameID = responseBodyAsObject["GameID"];
                 }
-
             }
             catch (Exception)
             {
@@ -251,7 +257,6 @@ namespace PS9
             return listAsArray.ToObject<List<string>>();
         }
 
-
         private void HandleSubmitWord(string obj)
         {
             throw new NotImplementedException();
@@ -261,7 +266,6 @@ namespace PS9
         {
             CancelGame();
         }
-
 
         private async void CancelGame()
         {
@@ -279,7 +283,6 @@ namespace PS9
                         throw new Exception("UserToken is invalid or is not a player in the pending game.");
                     }
                 }
-
             }
             catch (Exception)
             {
@@ -289,13 +292,10 @@ namespace PS9
             {
                 view.EnableControlsJoin(true);
             }
-
         }
-
 
         private async void RegisterUser(string username)
         {
-
             DesiredServer = view.ObtainDesiredServer();
             try
             {
@@ -318,7 +318,6 @@ namespace PS9
                     UserToken = (string)JsonConvert.DeserializeObject(username);
                     view.EnableEnterGameButton(true);
                 }
-
             }
             catch (Exception e)
             {
@@ -329,9 +328,7 @@ namespace PS9
             finally
             {
                 view.EnableControlsRegister(true);
-                
             }
-
         }
 
         private static HttpClient CreateClient(string address)
@@ -346,10 +343,5 @@ namespace PS9
 
             return client;
         }
-
-
-
-
-
     }
 }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace PS9
 {
@@ -14,6 +15,7 @@ namespace PS9
         event Action CancelGame;
         event Action<string> SubmitWord;
         event Action GetHelp;
+        event Action UpdateProperties;
 
         string ObtainUsername();
 

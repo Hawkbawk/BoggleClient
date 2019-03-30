@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Windows.Forms;
 
 namespace PS9
@@ -15,6 +14,12 @@ namespace PS9
             Cancel_Game_Button.Enabled = false;
             CancelRegister_Button.Enabled = false;
             Enter_Game_Button.Enabled = false;
+            UpdateProperty_Timer.Tick += HandleUpdate;
+        }
+
+        private void HandleUpdate(object sender, EventArgs e)
+        {
+            UpdateProperties();
         }
 
         public event Action EnterGame;
@@ -23,6 +28,7 @@ namespace PS9
         public event Action RegisterUser;
         public event Action CancelRegister;
         public event Action GetHelp;
+        public event Action UpdateProperties;
 
         public string ObtainUsername()
         {
@@ -41,7 +47,7 @@ namespace PS9
             Remaining_Time_Label.Text = timeLimit;           //Needs to be fixed to be with the server rather than with the local
         }
 
-        public void SetRemainingTime(string remainingTime)
+        public async void SetRemainingTime(string remainingTime)
         {
             Remaining_Time_Label.Text = remainingTime;
         }
@@ -103,15 +109,10 @@ namespace PS9
         public int GetDesiredTime()
         {
             int time = -1;
-            try
-            {
-                time = Convert.ToInt32(TimeLimit_Textbox.Text);
-            }
-            catch (Exception e)
-            {
-                ShowErrorMessage("Please only enter in integer values for your time limit.");
-                return -1;
-            }
+
+            time = Convert.ToInt32(TimeLimit_Textbox.Text);
+
+
             if (time < 5 || time > 120)
             {
                 throw new ArgumentOutOfRangeException();
@@ -142,7 +143,7 @@ namespace PS9
         public void SetUpBoard(string boardContents)
         {
             List<string> board = new List<string>();
-            foreach(char c in boardContents)
+            foreach (char c in boardContents)
             {
                 if (c == 'Q')
                 {
@@ -169,6 +170,7 @@ namespace PS9
             Field13.Text = board[13];
             Field14.Text = board[14];
             Field15.Text = board[15];
+            UpdateProperty_Timer.Enabled = true;
         }
 
         private void Help_Button_Clicked(object sender, System.ComponentModel.CancelEventArgs e)
