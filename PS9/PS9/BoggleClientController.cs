@@ -296,9 +296,9 @@ namespace PS9
             }
             catch (Exception e)
             {
-                if (e.Equals(typeof(TaskCanceledException)))
+                if (!(e is TaskCanceledException))
                 {
-                    view.ShowErrorMessage("A server side error has occurred. Please try again.");
+                    view.ShowErrorMessage("A server side error occurred. Please try again.");
                 }
             }
             finally
