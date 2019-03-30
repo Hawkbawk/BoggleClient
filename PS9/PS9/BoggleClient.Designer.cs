@@ -241,12 +241,12 @@
             // 
             // Opponent_Nickname
             // 
-            this.label14.AutoSize = true;
-            this.label14.Location = new System.Drawing.Point(204, 102);
-            this.label14.Name = "label14";
-            this.label14.Size = new System.Drawing.Size(24, 17);
-            this.label14.TabIndex = 36;
-            this.label14.Text = " ...";
+            this.Opponent_Nickname.AutoSize = true;
+            this.Opponent_Nickname.Location = new System.Drawing.Point(204, 102);
+            this.Opponent_Nickname.Name = "label14";
+            this.Opponent_Nickname.Size = new System.Drawing.Size(24, 17);
+            this.Opponent_Nickname.TabIndex = 36;
+            this.Opponent_Nickname.Text = " ...";
             // 
             // Enter_Game_Button
             // 

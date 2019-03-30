@@ -398,7 +398,8 @@ namespace PS9
                     HttpResponseMessage response = await client.GetAsync(gamesURI, tokenSource.Token);
                     string responseAsString = await response.Content.ReadAsStringAsync();
                     GetGameResponse responseAsObject = JsonConvert.DeserializeObject<GetGameResponse>(responseAsString);
-
+                    Player player1 = responseAsObject.Player1;
+                    Player player2 = responseAsObject.Player2;
                     gr = new GameResults();
                     gr.ChangeLabels(player1.Nickname, player2.Nickname, player1.Score.ToString(), player2.Score.ToString(), player1.WordsPlayed, player2.WordsPlayed);
                     gr.Show();
