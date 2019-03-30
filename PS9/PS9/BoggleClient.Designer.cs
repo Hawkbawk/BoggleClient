@@ -491,9 +491,9 @@
             this.label15.AutoSize = true;
             this.label15.Location = new System.Drawing.Point(12, 61);
             this.label15.Name = "label15";
-            this.label15.Size = new System.Drawing.Size(97, 13);
+            this.label15.Size = new System.Drawing.Size(96, 13);
             this.label15.TabIndex = 56;
-            this.label15.Text = "Desired TIme Limit:";
+            this.label15.Text = "Desired Time Limit:";
             // 
             // TimeLimit_Textbox
             // 
