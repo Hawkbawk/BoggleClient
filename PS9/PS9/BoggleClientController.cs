@@ -158,7 +158,7 @@ namespace PS9
             }
             await JoinGame(desiredTime);
             await StartGame();
-            view.EnableControlsInGame(true);
+            view.EnableControlsInGame(false);
         }
 
         private void HandleGetHelp()
@@ -419,6 +419,8 @@ namespace PS9
                     GetGameResponse responseAsObject = JsonConvert.DeserializeObject<GetGameResponse>(responseAsString);
                     Player player1 = responseAsObject.Player1;
                     Player player2 = responseAsObject.Player2;
+                    view.EnableControlsInGame(true);
+
                     gr = new GameResults();
                     gr.ChangeLabels(player1.Nickname, player2.Nickname, player1.Score.ToString(), player2.Score.ToString(), player1.WordsPlayed, player2.WordsPlayed);
                     view.EnableTimer(false);
