@@ -28,7 +28,7 @@ namespace PS9
         {
             label1.Text = P1_Name + "'s Results: ";
             label2.Text = P2_Name + "'s Results: ";
-            label3.Text = "Final Score: " + P1_Score + "-" + P2_Score;
+            label3.Text = "Final Score: " + P1_Score + " -- " + P2_Score;
 
             foreach (WordAndScore w in P1_Words)
             {
@@ -39,7 +39,5 @@ namespace PS9
                 richTextBox2.Text += w.Word + "-" + w.Score + Environment.NewLine;
             }
         }
-
-
     }
 }
