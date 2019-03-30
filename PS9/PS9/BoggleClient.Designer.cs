@@ -239,7 +239,7 @@
             // label13
             // 
             this.label13.AutoSize = true;
-            this.label13.Location = new System.Drawing.Point(42, 83);
+            this.label13.Location = new System.Drawing.Point(70, 83);
             this.label13.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label13.Name = "label13";
             this.label13.Size = new System.Drawing.Size(113, 13);
@@ -249,7 +249,7 @@
             // Opponent_Nickname
             // 
             this.Opponent_Nickname.AutoSize = true;
-            this.Opponent_Nickname.Location = new System.Drawing.Point(159, 83);
+            this.Opponent_Nickname.Location = new System.Drawing.Point(237, 83);
             this.Opponent_Nickname.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.Opponent_Nickname.Name = "Opponent_Nickname";
             this.Opponent_Nickname.Size = new System.Drawing.Size(19, 13);
