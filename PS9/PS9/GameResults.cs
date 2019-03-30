@@ -24,7 +24,7 @@ namespace PS9
         }
 
 
-        private void ChangeLabels(string P1_Name, string P2_Name, string P1_Score, string P2_Score, List<string> P1_Words, List<string> P2_Words)
+        public void ChangeLabels(string P1_Name, string P2_Name, string P1_Score, string P2_Score, List<string> P1_Words, List<string> P2_Words)
         {
             label1.Text = P1_Name + "'s Results: ";
             label2.Text = P2_Name + "'s Results: ";
@@ -32,11 +32,11 @@ namespace PS9
 
             foreach(string s in P1_Words)
             {
-                richTextBox1.Text = s + "\r\n";
+                richTextBox1.Text += s + Environment.NewLine;
             }
             foreach (string s in P2_Words)
             {
-                richTextBox2.Text = s + "\r\n";
+                richTextBox2.Text += s + Environment.NewLine;
             }
         }
 
