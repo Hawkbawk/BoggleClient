@@ -24,7 +24,7 @@ namespace PS9
         }
 
 
-        private void ChangeLabels(string P1_Name, string P2_Name, string P1_Score, string P2_Score, List<string> P1_Words, List<string> P2_Words)
+        public void ChangeLabels(string P1_Name, string P2_Name, string P1_Score, string P2_Score, List<string> P1_Words, List<string> P2_Words)
         {
             label1.Text = P1_Name + "'s Results: ";
             label2.Text = P2_Name + "'s Results: ";

@@ -356,6 +356,9 @@ namespace PS9
                     if (responseAsObject["GameState"].ToString().Equals("completed"))
                     {
                         GameCompleted = true;
+                        gr = new GameResults();
+                        gr.ChangeLabels();
+                        gr.Show();
                     }
                     // Update the TimeLeft
 
