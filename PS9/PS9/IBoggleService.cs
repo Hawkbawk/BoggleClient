@@ -30,7 +30,7 @@ namespace PS9
 
         void SetOpponentScore(string oppScore);
 
-        void SetCurrentPlayedWords(Word[] words);
+        void AddPlayedWord(string word);
 
         void EnableControlsRegister(bool state);
 

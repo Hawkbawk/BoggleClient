@@ -150,6 +150,7 @@ namespace PS9
             }
             await JoinGame(desiredTime);
             await StartGame();
+            view.EnableControlsInGame(true);
         }
 
         private void HandleGetHelp()
@@ -233,7 +234,7 @@ namespace PS9
                     StringContent content = new StringContent(JsonConvert.SerializeObject(body), Encoding.UTF8, "application/json");
                     string gamesURI = DesiredServer + "/BoggleService/games/" + GameID;
                     HttpResponseMessage response = await client.PutAsync(gamesURI, content, tokenSource.Token);
-
+                    string score = await response.Content.ReadAsStringAsync();
                     // Tell the user if there are any problems with their input.
                     if (response.StatusCode.Equals(403))
                     {
@@ -243,6 +244,7 @@ namespace PS9
                     {
                         throw new Exception("Game is not Active!");
                     }
+                    view.AddPlayedWord(word + "\t" + score);
 
                 }
             }
@@ -288,8 +290,6 @@ namespace PS9
                 if (e.Equals(typeof(TaskCanceledException)))
                 {
                     view.ShowErrorMessage("A server side error has occurred. Please try again.");
-                    view.ShowErrorMessage(e.ToString());
-                    view.EnableEnterGameButton(false);
                 }
             }
             finally
@@ -364,21 +364,11 @@ namespace PS9
                     {
                         view.SetPlayerScore(responseAsObject.Player1.Score.ToString());
                         view.SetOpponentScore(responseAsObject.Player2.Score.ToString());
-                        if (responseAsObject.Player1.WordsPlayed == null)
-                        {
-                            responseAsObject.Player1.WordsPlayed = new Word[0];
-                        }
-                        view.SetCurrentPlayedWords(responseAsObject.Player1.WordsPlayed);
                     }
                     else
                     {
                         view.SetPlayerScore(responseAsObject.Player2.Score.ToString());
                         view.SetOpponentScore(responseAsObject.Player1.Score.ToString());
-                        if (responseAsObject.Player2.WordsPlayed == null)
-                        {
-                            responseAsObject.Player2.WordsPlayed = new Word[0];
-                        }
-                        view.SetCurrentPlayedWords(responseAsObject.Player2.WordsPlayed);
                     }
 
 

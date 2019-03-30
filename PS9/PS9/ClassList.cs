@@ -19,12 +19,12 @@ namespace PS9
     {
         public string Nickname;
         public int Score;
-        public Word[] WordsPlayed;
+        public WordAndScore[] WordsPlayed;
     }
 
-    public class Word
+    public class WordAndScore
     {
-        public string word;
-        public int score;
+        public string Word;
+        public int Score;
     }
 }
