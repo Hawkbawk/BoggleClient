@@ -63,10 +63,10 @@ namespace PS9
             Opponent_CurrentScore_Label.Text = oppScore;
         }
 
-        public void SetCurrentPlayedWords(List<string> words)
+        public void SetCurrentPlayedWords(Word[] words)
         {
             ScoreBoard_Textbox.ResetText();
-            foreach(string word in words)
+            foreach(Word word in words)
             {
                 ScoreBoard_Textbox.Text += word + Environment.NewLine;
             }

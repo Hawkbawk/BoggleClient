@@ -345,44 +345,55 @@ namespace PS9
                     dynamic body = new ExpandoObject();
                     body.GameID = GameID;
                     StringContent content = new StringContent(JsonConvert.SerializeObject(body), Encoding.UTF8, "application/json");
-                    string gamesURI = DesiredServer + "/BoggleService/games/" + GameID + "/true";
+                    string gamesURI = DesiredServer + "/BoggleService/games/" + GameID + "/false";
                     // Check the server every second until the game is completed.
                     // Query the server
                     HttpResponseMessage response = await client.GetAsync(gamesURI, tokenSource.Token);
                     string responseAsString = await response.Content.ReadAsStringAsync();
-                    dynamic responseAsObject = JsonConvert.DeserializeObject(responseAsString);
+                    GetGameResponse responseAsObject = JsonConvert.DeserializeObject<GetGameResponse>(responseAsString);
 
-                    // Parse the input and update the GameState
-                    if (responseAsObject["GameState"].ToString().Equals("completed"))
+                    if (responseAsObject.GameState.Equals("completed"))
                     {
-                        GameCompleted = true;
+                        FinishGame();
+                        return;
                     }
-                    // Update the TimeLeft
 
-                    view.SetRemainingTime(responseAsObject["TimeLeft"].ToString());
-
-                    // Figure out which player we are and grab their info.
-                    dynamic currentPlayer = new ExpandoObject();
+                    view.SetRemainingTime(responseAsObject.TimeLeft);
+                    
                     if (ArePlayerOne)
                     {
-                        currentPlayer = responseAsObject["Player1"];
+                        view.SetPlayerScore(responseAsObject.Player1.Score.ToString());
+                        view.SetOpponentScore(responseAsObject.Player2.Score.ToString());
+                        if (responseAsObject.Player1.WordsPlayed == null)
+                        {
+                            responseAsObject.Player1.WordsPlayed = new Word[0];
+                        }
+                        view.SetCurrentPlayedWords(responseAsObject.Player1.WordsPlayed);
                     }
                     else
                     {
-                        currentPlayer = responseAsObject["Player2"];
+                        view.SetPlayerScore(responseAsObject.Player2.Score.ToString());
+                        view.SetOpponentScore(responseAsObject.Player1.Score.ToString());
+                        if (responseAsObject.Player2.WordsPlayed == null)
+                        {
+                            responseAsObject.Player2.WordsPlayed = new Word[0];
+                        }
+                        view.SetCurrentPlayedWords(responseAsObject.Player2.WordsPlayed);
                     }
 
-                    // Convert the JSON to a list of strings.
-                    List<string> words = ConvertJSONToList(JsonConvert.SerializeObject(currentPlayer["WordsPlayed"]));
 
-                    view.SetCurrentPlayedWords(words);
 
                 }
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                view.ShowErrorMessage("A server side issue has occurred");
+                view.ShowErrorMessage(e.ToString());
             }
+        }
+
+        private void FinishGame()
+        {
+            throw new NotImplementedException();
         }
     }
 }

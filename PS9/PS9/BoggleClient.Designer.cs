@@ -530,7 +530,7 @@
             // 
             // UpdateProperty_Timer
             // 
-            this.UpdateProperty_Timer.Interval = 1000;
+            this.UpdateProperty_Timer.Interval = 5000;
             // 
             // BoggleClient
             // 
