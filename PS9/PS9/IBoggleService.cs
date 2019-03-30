@@ -45,5 +45,7 @@ namespace PS9
         void SetUpBoard(string boardContents);
 
         void EnableTextBoxAndRegister(bool state);
+
+        void SetOpponentNickname(string nickname);
     }
 }

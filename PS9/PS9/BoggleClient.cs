@@ -68,7 +68,7 @@ namespace PS9
             ScoreBoard_Textbox.ResetText();
             foreach(Word word in words)
             {
-                ScoreBoard_Textbox.Text += word + Environment.NewLine;
+                ScoreBoard_Textbox.Text += word.word + "-" + word.score + Environment.NewLine;
             }
         }
 
@@ -195,6 +195,11 @@ namespace PS9
         {
             SubmitWord(Word_Textbox.Text);
             Word_Textbox.ResetText();
+        }
+
+        public void SetOpponentNickname(string nickname)
+        {
+            Opponent_Nickname.Text = nickname;
         }
     }
 }

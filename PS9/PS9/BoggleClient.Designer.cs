@@ -47,7 +47,7 @@
             this.Username_Textbox = new System.Windows.Forms.TextBox();
             this.label12 = new System.Windows.Forms.Label();
             this.label13 = new System.Windows.Forms.Label();
-            this.label14 = new System.Windows.Forms.Label();
+            this.Opponent_Nickname = new System.Windows.Forms.Label();
             this.Enter_Game_Button = new System.Windows.Forms.Button();
             this.Cancel_Game_Button = new System.Windows.Forms.Button();
             this.Field0 = new System.Windows.Forms.Button();
@@ -246,15 +246,15 @@
             this.label13.TabIndex = 35;
             this.label13.Text = "Currently Playing With:";
             // 
-            // label14
+            // Opponent_Nickname
             // 
-            this.label14.AutoSize = true;
-            this.label14.Location = new System.Drawing.Point(153, 83);
-            this.label14.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
-            this.label14.Name = "label14";
-            this.label14.Size = new System.Drawing.Size(19, 13);
-            this.label14.TabIndex = 36;
-            this.label14.Text = " ...";
+            this.Opponent_Nickname.AutoSize = true;
+            this.Opponent_Nickname.Location = new System.Drawing.Point(250, 83);
+            this.Opponent_Nickname.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.Opponent_Nickname.Name = "Opponent_Nickname";
+            this.Opponent_Nickname.Size = new System.Drawing.Size(19, 13);
+            this.Opponent_Nickname.TabIndex = 36;
+            this.Opponent_Nickname.Text = " ...";
             // 
             // Enter_Game_Button
             // 
@@ -555,7 +555,7 @@
             this.Controls.Add(this.Field0);
             this.Controls.Add(this.Cancel_Game_Button);
             this.Controls.Add(this.Enter_Game_Button);
-            this.Controls.Add(this.label14);
+            this.Controls.Add(this.Opponent_Nickname);
             this.Controls.Add(this.label13);
             this.Controls.Add(this.label12);
             this.Controls.Add(this.Username_Textbox);
@@ -576,7 +576,7 @@
             this.Controls.Add(this.Word_Textbox);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.HelpButton = true;
-            this.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.Margin = new System.Windows.Forms.Padding(2);
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "BoggleClient";
@@ -608,7 +608,7 @@
         private System.Windows.Forms.TextBox Username_Textbox;
         private System.Windows.Forms.Label label12;
         private System.Windows.Forms.Label label13;
-        private System.Windows.Forms.Label label14;
+        private System.Windows.Forms.Label Opponent_Nickname;
         private System.Windows.Forms.Button Enter_Game_Button;
         private System.Windows.Forms.Button Cancel_Game_Button;
         private System.Windows.Forms.Button Field0;

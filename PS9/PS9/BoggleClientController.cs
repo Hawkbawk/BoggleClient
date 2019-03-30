@@ -391,9 +391,35 @@ namespace PS9
             }
         }
 
-        private void FinishGame()
+        private async void FinishGame()
         {
-            throw new NotImplementedException();
+            try
+            {
+                using (HttpClient client = CreateClient(DesiredServer))
+                {
+                    // Setup the stuff necessary to query the server.
+                    tokenSource = new CancellationTokenSource();
+                    dynamic body = new ExpandoObject();
+                    body.GameID = GameID;
+                    StringContent content = new StringContent(JsonConvert.SerializeObject(body), Encoding.UTF8, "application/json");
+                    string gamesURI = DesiredServer + "/BoggleService/games/" + GameID + "/false";
+                    // Check the server every second until the game is completed.
+                    // Query the server
+                    HttpResponseMessage response = await client.GetAsync(gamesURI, tokenSource.Token);
+                    string responseAsString = await response.Content.ReadAsStringAsync();
+                    GetGameResponse responseAsObject = JsonConvert.DeserializeObject<GetGameResponse>(responseAsString);
+
+                    gr = new GameResults();
+                    gr.ChangeLabels(player1.Nickname, player2.Nickname, player1.Score.ToString(), player2.Score.ToString(), player1.WordsPlayed, player2.WordsPlayed);
+                    gr.Show();
+
+                }
+            }
+            catch (Exception e)
+            {
+                view.ShowErrorMessage(e.ToString());
+            }
+
         }
     }
 }

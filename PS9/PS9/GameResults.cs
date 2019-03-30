@@ -24,19 +24,19 @@ namespace PS9
         }
 
 
-        public void ChangeLabels(string P1_Name, string P2_Name, string P1_Score, string P2_Score, List<string> P1_Words, List<string> P2_Words)
+        public void ChangeLabels(string P1_Name, string P2_Name, string P1_Score, string P2_Score, Word[] P1_Words, Word[] P2_Words)
         {
             label1.Text = P1_Name + "'s Results: ";
             label2.Text = P2_Name + "'s Results: ";
             label3.Text = "Final Score: " + P1_Score + "-" + P2_Score;
 
-            foreach(string s in P1_Words)
+            foreach (Word w in P1_Words)
             {
-                richTextBox1.Text += s + Environment.NewLine;
+                richTextBox1.Text += w.word + "-" + w.score + Environment.NewLine;
             }
-            foreach (string s in P2_Words)
+            foreach (Word w in P2_Words)
             {
-                richTextBox2.Text += s + Environment.NewLine;
+                richTextBox2.Text += w.word + "-" + w.score + Environment.NewLine;
             }
         }
 
