@@ -100,9 +100,9 @@ namespace PS9
             }
             catch (Exception e)
             {
-                if (!(e is TaskCanceledException))
+                if (e is TaskCanceledException)
                 {
-                    view.ShowMessage("A server side error has occurred. Please try again.");
+                    view.ShowMessage("Game canceled.");
                 }
             }
         }
@@ -111,15 +111,22 @@ namespace PS9
         {
             Player player1 = responseBody.Player1;
             Player player2 = responseBody.Player2;
-            view.EnableControlsInGame(true);
+            view.Reset();
+            InAGame = false;
+            if (player1.WordsPlayed == null)
+            {
+                player1.WordsPlayed = new WordAndScore[0];
+            }
+            if (player2.WordsPlayed == null)
+            {
+                player2.WordsPlayed = new WordAndScore[0];
+            }
 
             view.EnableTimer(false);
             view.DisplayFinalScore(player1.Nickname, player2.Nickname,
                 player1.Score.ToString(), player2.Score.ToString(),
                 player1.WordsPlayed, player2.WordsPlayed);
 
-            InAGame = false;
-            view.Reset();
         }
 
         /// <summary>
@@ -132,15 +139,18 @@ namespace PS9
                 using (HttpClient client = CreateClient(DesiredServer))
                 {
                     // TODO: Ensure that the controls are properly updating before querying the server to in the BoggleClientController.CancelGame method.
-                    view.EnableControlsJoin(false);
+                    
                     // Setup the stuff for querying the server
                     StringContent content = new StringContent(JsonConvert.SerializeObject(UserToken), Encoding.UTF8, "application/json");
                     string gamesURI = DesiredServer + "/BoggleService/games";
                     // Do a PUT request to tell the server we want to cancel our game.
                     HttpResponseMessage response = await client.PutAsync(gamesURI, content);
+                    // Catch any errors from the server's response.
                     if (response.StatusCode == HttpStatusCode.Forbidden)
                     {
-                        throw new Exception("UserToken is invalid or is not a player in the pending game.");
+                        //view.ShowMessage("You're not currently in a pending " +
+                        //    "game. You probably shouldn't even be able to hit that button. Oops :)");
+                        //return;
                     }
 
                     // Change our URI so we can get the status of our game.
@@ -157,13 +167,15 @@ namespace PS9
                     if (responseBody.GameState.Equals("pending"))
                     {
                         // TODO: Reset the board for a pending game being canceled.
+                        view.SetUpControlsAfterRegister();
+                        view.EnableTimer(false);
+                        InAGame = false;
                     }
-                    // Or reset the board for a cancelled active game.
+                    // Or reset the board for a canceled active/completed game, although you shouldn't technically .
                     else
                     {
                         tokenSource.Cancel();
                         FinishGame(responseBody);
-
                     }
                 }
             }
@@ -174,14 +186,6 @@ namespace PS9
                     view.ShowMessage("A server side error has occurred. Please try again.");
                 }
             }
-            finally
-            {
-                // TODO: Ensure that the controls are updating properly after querying the server in the BoggleClientController.CancelGame method.
-                //view.EnableControlsJoin(true);
-                //view.Reset();
-                //view.EnableTimer(false);
-                //InAGame = false;
-            }
         }
 
         /// <summary>
@@ -190,6 +194,7 @@ namespace PS9
         private void HandleCancelRegister()
         {
             tokenSource.Cancel();
+            view.Reset();
         }
 
         /// <summary>
@@ -224,7 +229,7 @@ namespace PS9
         private async void HandleRegisterUser()
         {
             // Obtains the user's desired username and gives them a message if it's invalid.
-            UserNickname = view.ObtainUsername();
+            UserNickname = view.GetUsername();
             if (UserNickname == null || UserNickname.Length > 50)
             {
                 view.ShowMessage("You've given an invalid username!");
@@ -232,7 +237,7 @@ namespace PS9
             }
 
             // Obtains the user's desired server and gives them a message if it's an invalid server name.
-            DesiredServer = view.ObtainDesiredServer();
+            DesiredServer = view.GetDesiredServer();
             if (DesiredServer == null)
             {
                 view.ShowMessage("You can't have an empty server!");
@@ -244,31 +249,39 @@ namespace PS9
             {
                 using (HttpClient client = CreateClient(DesiredServer))
                 {
+                    view.SetUpControlsWhileRegister();
+                    // Setup everything needed to query the server.
                     tokenSource = new CancellationTokenSource();
-                    view.EnableControlsRegister(false);
                     StringContent content = new StringContent(JsonConvert.SerializeObject(UserNickname), Encoding.UTF8, "application/json");
                     string usersURI = DesiredServer + "/BoggleService/users";
+                    // Query the server and tell it to register this user.
                     HttpResponseMessage response = await client.PostAsync(usersURI, content, tokenSource.Token);
+                    // Catch any errors that the server might give us.
                     if (response.StatusCode == HttpStatusCode.Forbidden)
                     {
                         view.ShowMessage("You've given an invalid name!");
+                        view.Reset();
                         return;
                     }
+                    // Otherwise, read in the UserToken from the server and store it.
                     string userTokenAsJson = await response.Content.ReadAsStringAsync();
                     UserToken = (string)JsonConvert.DeserializeObject(userTokenAsJson);
-                    view.EnableEnterGameButton(true);
+
                 }
             }
             catch (Exception e)
             {
-                if (!(e is TaskCanceledException))
+                if (e is TaskCanceledException)
                 {
-                    view.ShowMessage("A server side error occurred. Please try again.");
+                    view.ShowMessage("Registration canceled.");
+                    view.Reset();
+                    return;
                 }
             }
             finally
             {
-                view.EnableControlsRegister(true);
+                // TODO: Ensure that all controls are updating properly after registering a user with the server.
+                view.SetUpControlsAfterRegister();
             }
         }
 
@@ -334,8 +347,8 @@ namespace PS9
             {
                 using (HttpClient client = CreateClient(DesiredServer))
                 {
+                    view.SetUpControlsWhileWaitingForGame();
                     tokenSource = new CancellationTokenSource();
-                    view.EnableControlsJoin(false);
                     // Create a dynamic object that will be serialized.
                     dynamic body = new ExpandoObject();
                     body.UserToken = UserToken;
@@ -358,6 +371,7 @@ namespace PS9
                     string responseBodyAsString = await response.Content.ReadAsStringAsync();
                     JoinGameResponse responseBody = JsonConvert.DeserializeObject<JoinGameResponse>(responseBodyAsString);
                     GameID = responseBody.GameID;
+                    ArePlayerOne = responseBody.IsPending;
                 }
             }
             catch (Exception e)
@@ -368,12 +382,13 @@ namespace PS9
                     HandleCancelGame();
                 }
             }
-            finally
-            {
-                //view.EnableControlsJoin(true);
-            }
         }
 
+        /// <summary>
+        /// Using the previously obtained GameID, waits for that game to start up. Once the game is
+        /// no longer pending, sets up the view accordingly.
+        /// </summary>
+        /// <returns>Returns a Task with no return type so this method can be awaited</returns>
         private async Task StartGame()
         {
             try
@@ -381,16 +396,18 @@ namespace PS9
                 using (HttpClient client = CreateClient(DesiredServer))
                 {
                     // TODO: Ensure that the controls are properly updating before the server query in BoggleClientController.StartGame().
-                    // TODO: Ensure that the controls are properly updating before the server query in BoggleClientController.StartGame().
-
+                    view.SetUpControlsWhileWaitingForGame();
+                    // Setup all the stuff necessary to query the server.
                     tokenSource = new CancellationTokenSource();
                     dynamic body = new ExpandoObject();
                     body.GameID = GameID;
                     StringContent content = new StringContent(JsonConvert.SerializeObject(body), Encoding.UTF8, "application/json");
                     string gamesURI = DesiredServer + "/BoggleService/games/" + GameID + "/false";
 
-                    // Parse the server's response.
+                    // Query the server
                     HttpResponseMessage response = await client.GetAsync(gamesURI, tokenSource.Token);
+
+                    // Parse the server's response.
                     string responseAsString = await response.Content.ReadAsStringAsync();
                     GetGameStatus responseBody = JsonConvert.DeserializeObject<GetGameStatus>(responseAsString);
                     if (responseBody.GameState.Equals("pending"))
@@ -406,9 +423,15 @@ namespace PS9
                     Board = responseBody.Board;
                     view.SetTimeLimit(responseBody.TimeLimit);
                     view.SetUpBoard(Board.ToString());
+                    if (ArePlayerOne)
+                    {
+                        view.SetOpponentNickname(responseBody.Player2.Nickname);
+                    }
+                    else
+                    {
+                        view.SetOpponentNickname(responseBody.Player1.Nickname);
+                    }
                     view.EnableTimer(true);
-
-                    ArePlayerOne = responseBody.Player1.Nickname.Equals(UserNickname);
                     InAGame = true;
                 }
             }
@@ -422,10 +445,14 @@ namespace PS9
             finally
             {
                 // TODO: Ensure that the controls are properly updating after starting the game.
-                view.EnableControlsInGame(true);
+                view.SetUpControlsInGame();
             }
         }
 
+        /// <summary>
+        /// Method called by the timer every second that updates the view to contain the most current
+        /// information about the current state of the game.
+        /// </summary>
         private async void UpdateBoard()
         {
             try
@@ -451,19 +478,19 @@ namespace PS9
                         return;
                     }
 
+                    // Otherwise, update the view's elements to match the newly received information.
                     view.SetRemainingTime(responseBody.TimeLeft);
 
+                    // Depending on if you are or aren't player one, set's the scores accordingly.
                     if (ArePlayerOne)
                     {
                         view.SetPlayerScore(responseBody.Player1.Score.ToString());
                         view.SetOpponentScore(responseBody.Player2.Score.ToString());
-                        view.SetOpponentNickname(responseBody.Player2.Nickname);
                     }
                     else
                     {
                         view.SetPlayerScore(responseBody.Player2.Score.ToString());
                         view.SetOpponentScore(responseBody.Player1.Score.ToString());
-                        view.SetOpponentNickname(responseBody.Player1.Nickname);
                     }
                 }
             }

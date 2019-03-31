@@ -17,9 +17,9 @@ namespace PS9
 
         event Action UpdateProperties;
 
-        string ObtainUsername();
+        string GetUsername();
 
-        string ObtainDesiredServer();
+        string GetDesiredServer();
 
         void SetTimeLimit(string timeLimit);
 
@@ -33,23 +33,18 @@ namespace PS9
 
         void AddPlayedWord(string word);
 
-        void EnableControlsRegister(bool state);
-
-        void EnableEnterGameButton(bool state);
-
-        void EnableControlsJoin(bool state);
-
-        void EnableControlsInGame(bool state);
-
         void ShowMessage(string errorMsg);
 
         void SetUpBoard(string boardContents);
 
-        void EnableTextBoxAndRegister(bool state);
-
         void SetOpponentNickname(string nickname);
 
         void EnableTimer(bool state);
+
+        void SetUpControlsAfterRegister();
+        void SetUpControlsWhileRegister();
+        void SetUpControlsInGame();
+        void SetUpControlsWhileWaitingForGame();
 
         void Reset();
 

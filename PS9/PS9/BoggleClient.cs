@@ -25,12 +25,7 @@ namespace PS9
         public BoggleClient()
         {
             InitializeComponent();
-            ServerName_Textbox.Text = "http://ice.eng.utah.edu";
-            RegisterUser_Button.Enabled = true;
-            Cancel_Game_Button.Enabled = false;
-            CancelRegister_Button.Enabled = false;
-            Enter_Game_Button.Enabled = false;
-            ScoreBoard_Textbox.ReadOnly = true;
+            Reset();
             UpdateProperty_Timer.Tick += HandleUpdate;
         }
 
@@ -42,49 +37,7 @@ namespace PS9
         {
             ScoreBoard_Textbox.Text += word + Environment.NewLine;
         }
-
-        // TODO: Look at this method and all other enable control methods and ensure they are doing what we actually want.
-        public void EnableControlsInGame(bool state)
-        {
-            EnableTextBoxAndRegister(state);
-            EnableEnterGameButton(!state);
-            Cancel_Game_Button.Enabled = state;
-            RegisterUser_Button.Enabled = !state;
-        }
-
-        // TODO: Look at this method and all other enable control methods and ensure they are doing what we actually want.
-
-        public void EnableControlsJoin(bool state)
-        {
-            EnableTextBoxAndRegister(state);
-            EnableEnterGameButton(state);
-            Cancel_Game_Button.Enabled = !state;
-        }
-
-        // TODO: Look at this method and all other enable control methods and ensure they are doing what we actually want.
-
-        public void EnableControlsRegister(bool state)
-        {
-            EnableTextBoxAndRegister(state);
-            CancelRegister_Button.Enabled = !state;
-        }
-
-        // TODO: Look at this method and all other enable control methods and ensure they are doing what we actually want.
-
-        public void EnableEnterGameButton(bool state)
-        {
-            Enter_Game_Button.Enabled = state;
-        }
-
-        // TODO: Look at this method and all other enable control methods and ensure they are doing what we actually want.
-
-        public void EnableTextBoxAndRegister(bool state)
-        {
-            Username_Textbox.Enabled = state;
-            ServerName_Textbox.Enabled = state;
-            TimeLimit_Textbox.Enabled = state;
-            RegisterUser_Button.Enabled = state;
-        }
+      
 
         // TODO: Look at this method and all other enable control methods and ensure they are doing what we actually want.
 
@@ -116,6 +69,7 @@ namespace PS9
             {
                 ShowMessage("Please only give an integer value for your " +
                     "desired time limit.");
+                return time;
             }
 
             if (time < 5 || time > 120)
@@ -132,7 +86,7 @@ namespace PS9
         /// <returns>
         /// Returns the name of the server that the user would like to use for their Boggle game.
         /// </returns>
-        public string ObtainDesiredServer()
+        public string GetDesiredServer()
         {
             return ServerName_Textbox.Text;
         }
@@ -141,14 +95,14 @@ namespace PS9
         /// Obtains the user's desired username.
         /// </summary>
         /// <returns></returns>
-        public string ObtainUsername()
+        public string GetUsername()
         {
             return Username_Textbox.Text;
         }
 
         public void Reset()
         {
-            // Reset the board.
+            // Reset the board and the default server name.
             Field0.Text = "";
             Field1.Text = "";
             Field2.Text = "";
@@ -165,20 +119,30 @@ namespace PS9
             Field13.Text = "";
             Field14.Text = "";
             Field15.Text = "";
-
-            // Enable and disable the appropriate controls.
             ServerName_Textbox.Text = "http://ice.eng.utah.edu";
-            RegisterUser_Button.Enabled = true;
-            Cancel_Game_Button.Enabled = false;
-            CancelRegister_Button.Enabled = false;
-            Enter_Game_Button.Enabled = true;
-            ScoreBoard_Textbox.ReadOnly = true;
             SetOpponentScore("0");
             SetPlayerScore("0");
             ScoreBoard_Textbox.ResetText();
             SetOpponentNickname("...");
             SetRemainingTime("0");
             SetTimeLimit("0");
+
+            // Go back to the very beginning, where the user has to reregister in order to play again.
+            Cancel_Game_Button.Enabled = false;
+            CancelRegister_Button.Enabled = false;
+            Enter_Game_Button.Enabled = false;
+            Enter_Button.Enabled = false;
+            Word_Textbox.Enabled = false;
+            TimeLimit_Textbox.Enabled = false;
+
+            // Hide the time limit stuff so the user doesn't see it.
+            DesiredTimeLimit_Label.Hide();
+            TimeLimit_Textbox.Hide();
+
+            // Make it so the user can interact with only these three things.
+            Username_Textbox.Enabled = true;
+            ServerName_Textbox.Enabled = true;
+            RegisterUser_Button.Enabled = true;
         }
 
         public void SetOpponentNickname(string nickname)
@@ -296,6 +260,65 @@ namespace PS9
             GameResults gr = new GameResults();
             gr.ChangeLabels(P1_Name, P2_Name, P1_Score, P2_Score, P1_Words, P2_Words);
             gr.Show();
+            // Enable the game button because now the player is registered with the server for sure.
+            Enter_Game_Button.Enabled = true;
+        }
+
+        public void SetUpControlsAfterRegister()
+        {
+            // Disable the appropriate controls so the user doesn't mess things up.
+            CancelRegister_Button.Enabled = false;
+            Cancel_Game_Button.Enabled = false;
+
+            // Show the desired time limit so the user can enter in their desired time limit.
+            DesiredTimeLimit_Label.Show();
+            TimeLimit_Textbox.Show();
+
+            // Enable the proper controls so that the user can perform the appopriate actions.
+            Username_Textbox.Enabled = true;
+            ServerName_Textbox.Enabled = true;
+            TimeLimit_Textbox.Enabled = true;
+            RegisterUser_Button.Enabled = true;
+            Enter_Game_Button.Enabled = true;
+        }
+
+        public void SetUpControlsInGame()
+        {
+            // All of the fields a user shouldn't be able to change during a game.
+            Enter_Game_Button.Enabled = false;
+
+            // Hide the desired time limit cause it's distracting
+            DesiredTimeLimit_Label.Hide();
+            TimeLimit_Textbox.Hide();
+
+            // Let the user now submit words.
+            Word_Textbox.Enabled = true;
+            Enter_Button.Enabled = true;
+
+        }
+
+        public void SetUpControlsWhileRegister()
+        {
+            // Disable the appropriate controls.
+            Username_Textbox.Enabled = false;
+            ServerName_Textbox.Enabled = false;
+            RegisterUser_Button.Enabled = false;
+
+            // Enable the appropriate controls.
+            CancelRegister_Button.Enabled = true;
+        }
+
+        public void SetUpControlsWhileWaitingForGame()
+        {
+            // Disable the appropriate controls.
+            Username_Textbox.Enabled = false;
+            ServerName_Textbox.Enabled = false;
+            TimeLimit_Textbox.Enabled = false;
+            RegisterUser_Button.Enabled = false;
+            Enter_Game_Button.Enabled = false;
+
+            // Enable the appropriate controls.
+            Cancel_Game_Button.Enabled = true;
         }
     }
 }
