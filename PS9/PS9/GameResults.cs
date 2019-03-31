@@ -1,11 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using PS9.Models;
+using System;
 using System.Windows.Forms;
 
 namespace PS9
@@ -15,14 +9,12 @@ namespace PS9
         public GameResults()
         {
             InitializeComponent();
-            
         }
 
         private void OK_Button_Click(object sender, EventArgs e)
         {
-            this.Close();
+            Close();
         }
-
 
         public void ChangeLabels(string P1_Name, string P2_Name, string P1_Score, string P2_Score, WordAndScore[] P1_Words, WordAndScore[] P2_Words)
         {

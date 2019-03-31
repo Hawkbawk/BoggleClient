@@ -1,8 +1,8 @@
 ﻿using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
+using PS9.Models;
 using System;
-using System.Collections.Generic;
 using System.Dynamic;
+using System.Net;
 using System.Net.Http;
 using System.Text;
 using System.Threading;
@@ -12,18 +12,29 @@ namespace PS9
 {
     internal class BoggleClientController
     {
-        private GameResults gr;
+        #region Private Fields
+
+        //
         private CancellationTokenSource tokenSource;
+
         private IBoggleService view;
-        private int ActualTime { get; set; }
+
+        #endregion Private Fields
+
+        #region Private Properties
+
         private bool ArePlayerOne { get; set; }
         private string Board { get; set; }
         private string DesiredServer { get; set; }
-        private bool GameCompleted { get; set; }
-        private bool InAGame { get; set; }
         private string GameID { get; set; }
-        private string Nickname { get; set; }
+        private bool InAGame { get; set; }
+        private string UserNickname { get; set; }
         private string UserToken { get; set; }
+
+        #endregion Private Properties
+
+        #region Public Constructors
+
         public BoggleClientController(IBoggleService _view)
         {
             view = _view;
@@ -33,55 +44,32 @@ namespace PS9
             view.SubmitWord += HandleSubmitWord;
             view.CancelRegister += HandleCancelRegister;
             view.RegisterUser += HandleRegisterUser;
-            view.GetHelp += HandleGetHelp;
             view.UpdateProperties += UpdateBoard;
         }
 
+        #endregion Public Constructors
+
+        #region Private Methods
+
+        /// <summary>
+        /// Creates a new HttpClient with the passed in address, to be used for querying a server
+        /// that implements the Boggle API.
+        /// </summary>
+        /// <param name="address">The base address of the server to be queryed</param>
+        /// <returns>An HttpClient for querying the specified server</returns>
         private static HttpClient CreateClient(string address)
         {
             //Create a client whose base address is whatever the user inputs
-            HttpClient client = new HttpClient();
-            client.BaseAddress = new Uri(address);
+            HttpClient client = new HttpClient
+            {
+                BaseAddress = new Uri(address)
+            };
 
             //Tell the server that the client will accept this particular type of response data
             client.DefaultRequestHeaders.Accept.Clear();
             client.DefaultRequestHeaders.Add("Accept", "application/json");
 
             return client;
-        }
-
-        private async void CancelGame()
-        {
-            try
-            {
-                using (HttpClient client = CreateClient(DesiredServer))
-                {
-                    tokenSource.Cancel();
-                    view.EnableControlsJoin(false);  //Stuff from Joe's Controller3
-                    StringContent content = new StringContent(JsonConvert.SerializeObject(UserToken), Encoding.UTF8, "application/json");
-                    string gamesURI = DesiredServer + "/BoggleService/games";
-                    HttpResponseMessage response = await client.PutAsync(gamesURI, content, tokenSource.Token);
-                    if (response.StatusCode.Equals(403))
-                    {
-                        throw new Exception("UserToken is invalid or is not a player in the pending game.");
-                    }
-                }
-            }
-            catch (Exception e)
-            {
-                if (!(e is TaskCanceledException))
-                {
-                    view.ShowErrorMessage("A server side error has occurred. Please try again.");
-                }
-                
-            }
-            finally
-            {
-                view.EnableControlsJoin(true);
-                view.Reset();
-                view.EnableTimer(false);
-                InAGame = false;
-            }
         }
 
         private async Task CheckGameStatus()
@@ -114,78 +102,232 @@ namespace PS9
             {
                 if (!(e is TaskCanceledException))
                 {
-                    view.ShowErrorMessage("A server side error has occurred. Please try again.");
+                    view.ShowMessage("A server side error has occurred. Please try again.");
                 }
             }
         }
 
-        private List<string> ConvertJSONToList(string json)
+        private void FinishGame(GetGameStatus responseBody)
         {
-            JObject listAsJObject = JObject.Parse(json);
+            Player player1 = responseBody.Player1;
+            Player player2 = responseBody.Player2;
+            view.EnableControlsInGame(true);
 
-            JArray listAsArray = (JArray)listAsJObject["Words"];
+            view.EnableTimer(false);
+            view.DisplayFinalScore(player1.Nickname, player2.Nickname,
+                player1.Score.ToString(), player2.Score.ToString(),
+                player1.WordsPlayed, player2.WordsPlayed);
 
-            return listAsArray.ToObject<List<string>>();
+            InAGame = false;
+            view.Reset();
         }
 
-        private void HandleCancelGame()
+        /// <summary>
+        /// Cancels the game that the user is currently in or trying to join.
+        /// </summary>
+        private async void HandleCancelGame()
         {
-            CancelGame();
+            try
+            {
+                using (HttpClient client = CreateClient(DesiredServer))
+                {
+                    // TODO: Ensure that the controls are properly updating before querying the server to in the BoggleClientController.CancelGame method.
+                    view.EnableControlsJoin(false);
+                    // Setup the stuff for querying the server
+                    StringContent content = new StringContent(JsonConvert.SerializeObject(UserToken), Encoding.UTF8, "application/json");
+                    string gamesURI = DesiredServer + "/BoggleService/games";
+                    // Do a PUT request to tell the server we want to cancel our game.
+                    HttpResponseMessage response = await client.PutAsync(gamesURI, content);
+                    if (response.StatusCode == HttpStatusCode.Forbidden)
+                    {
+                        throw new Exception("UserToken is invalid or is not a player in the pending game.");
+                    }
+
+                    // Change our URI so we can get the status of our game.
+                    gamesURI += "/" + GameID + "/false";
+
+                    // Query the server about our game.
+                    response = await client.GetAsync(gamesURI);
+
+                    // Deserialize the server's response.
+                    string responseAsString = await response.Content.ReadAsStringAsync();
+                    GetGameStatus responseBody = JsonConvert.DeserializeObject<GetGameStatus>(responseAsString);
+
+                    // Reset the board for a canceled pending game
+                    if (responseBody.GameState.Equals("pending"))
+                    {
+                        // TODO: Reset the board for a pending game being canceled.
+                    }
+                    // Or reset the board for a cancelled active game.
+                    else
+                    {
+                        tokenSource.Cancel();
+                        FinishGame(responseBody);
+
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                if (!(e is TaskCanceledException))
+                {
+                    view.ShowMessage("A server side error has occurred. Please try again.");
+                }
+            }
+            finally
+            {
+                // TODO: Ensure that the controls are updating properly after querying the server in the BoggleClientController.CancelGame method.
+                //view.EnableControlsJoin(true);
+                //view.Reset();
+                //view.EnableTimer(false);
+                //InAGame = false;
+            }
         }
 
+        /// <summary>
+        /// Cancels the user's pending registration with the server.
+        /// </summary>
         private void HandleCancelRegister()
         {
             tokenSource.Cancel();
         }
 
+        /// <summary>
+        /// Starts the process for entering the user into a game of Boggle.
+        /// </summary>
         private async void HandleEnterGame()
         {
+            // If you're already in a game, you definitely shouldn't be able to enter a game again.
             if (InAGame)
             {
                 return;
             }
-            view.SetOpponentScore("0");
-            view.SetPlayerScore("0");
-            int desiredTime = 0;
-            try
+
+            // Obtain the desired time limit.
+            int desiredTime = view.GetDesiredTime();
+
+            // If the time limit is invalid (IE less than 0), then simply stop trying to enter the game.
+            if (desiredTime < 0)
             {
-                desiredTime = view.GetDesiredTime();
-            }
-            catch (Exception e)
-            {
-                if (e is ArgumentOutOfRangeException)
-                {
-                    view.ShowErrorMessage("Your time limit must be greater than or equal to 5 and less than or equal to 120.");
-                }
-                else
-                {
-                    view.ShowErrorMessage("Your time limit isn't an integer.");
-                }
                 return;
             }
+
+            // Otherwise, wait for JoinGame to complete, and then start the game.
             await JoinGame(desiredTime);
             await StartGame();
         }
 
-        private void HandleGetHelp()
+        /// <summary>
+        /// Registers the user with their desired server by using their desired nickname. Shows an
+        /// appropriate error message to the user if something goes wrong.
+        /// </summary>
+        private async void HandleRegisterUser()
         {
-            view.ShowErrorMessage("The Rules of Boggle can be found here: http://en.wikipedia.org/wiki/Boggle. " +
-                "With this client, all you need to do is make a username of your choice, connect it to a server of your choice, and enter in your desired time limit. " +
-                "Once you have all the fields filled in, click the register button, and then join when it is possible. Once you are in a game, all you need to do is type in words you" +
-                "found from the interface into the textbox on the bottom and submit the word by clicking enter.");
+            // Obtains the user's desired username and gives them a message if it's invalid.
+            UserNickname = view.ObtainUsername();
+            if (UserNickname == null || UserNickname.Length > 50)
+            {
+                view.ShowMessage("You've given an invalid username!");
+                return;
+            }
+
+            // Obtains the user's desired server and gives them a message if it's an invalid server name.
+            DesiredServer = view.ObtainDesiredServer();
+            if (DesiredServer == null)
+            {
+                view.ShowMessage("You can't have an empty server!");
+                return;
+            }
+
+            // Tries to register the user with their desired server.
+            try
+            {
+                using (HttpClient client = CreateClient(DesiredServer))
+                {
+                    tokenSource = new CancellationTokenSource();
+                    view.EnableControlsRegister(false);
+                    StringContent content = new StringContent(JsonConvert.SerializeObject(UserNickname), Encoding.UTF8, "application/json");
+                    string usersURI = DesiredServer + "/BoggleService/users";
+                    HttpResponseMessage response = await client.PostAsync(usersURI, content, tokenSource.Token);
+                    if (response.StatusCode == HttpStatusCode.Forbidden)
+                    {
+                        view.ShowMessage("You've given an invalid name!");
+                        return;
+                    }
+                    string userTokenAsJson = await response.Content.ReadAsStringAsync();
+                    UserToken = (string)JsonConvert.DeserializeObject(userTokenAsJson);
+                    view.EnableEnterGameButton(true);
+                }
+            }
+            catch (Exception e)
+            {
+                if (!(e is TaskCanceledException))
+                {
+                    view.ShowMessage("A server side error occurred. Please try again.");
+                }
+            }
+            finally
+            {
+                view.EnableControlsRegister(true);
+            }
         }
 
-        private void HandleRegisterUser()
+        /// <summary>
+        /// Submits the passed in word to the server handling all of the scoring and then updates the
+        /// GUI to show the passed in word as played, as well as what score is associated with that word.
+        /// </summary>
+        /// <param name="word">The word to be played</param>
+        private async void HandleSubmitWord(string word)
         {
-            Nickname = view.ObtainUsername();
-            RegisterUser(view.ObtainUsername());
+            // Make it so the user can't submit a word if they're not in a game.
+            if (!InAGame)
+            {
+                return;
+            }
+            try
+            {
+                using (HttpClient client = CreateClient(DesiredServer))
+                {
+                    // Create a dynamic object that will be serialized.
+                    dynamic body = new ExpandoObject();
+                    body.UserToken = UserToken;
+                    body.Word = word;
+
+                    // Serialize the body and create the URI
+                    StringContent content = new StringContent(JsonConvert.SerializeObject(body), Encoding.UTF8, "application/json");
+                    string gamesURI = DesiredServer + "/BoggleService/games/" + GameID;
+                    // Query the server
+                    HttpResponseMessage response = await client.PutAsync(gamesURI, content);
+
+                    // Receive the submitted words score.
+                    string score = await response.Content.ReadAsStringAsync();
+                    // Tell the user if there are any problems with their input.
+                    if (response.StatusCode == HttpStatusCode.Forbidden)
+                    {
+                        view.ShowMessage("The word you've given is either null or too long!");
+                        return;
+                    }
+                    else if (response.StatusCode == HttpStatusCode.Conflict)
+                    {
+                        view.ShowMessage("Your current game isn't active!");
+                        return;
+                    }
+                    // Otherwise, shows the player the word they just played and that word's score.
+                    view.AddPlayedWord(word + "\t" + score);
+                }
+            }
+            catch (Exception)
+            {
+                view.ShowMessage("A server side error has occurred. Please try again.");
+            }
         }
 
-        private void HandleSubmitWord(string obj)
-        {
-            PlayWord(obj);
-        }
-
+        /// <summary>
+        /// Put's the user in the queue with the server, saying they'd like to start a game. Stores
+        /// the GameID that the server returns, so the player can actually join the game once it starts.
+        /// </summary>
+        /// <param name="TimeLimit">The user's desired time limit for the game</param>
+        /// <returns></returns>
         private async Task JoinGame(int TimeLimit)
         {
             try
@@ -206,116 +348,29 @@ namespace PS9
                     // Post to the server.
                     HttpResponseMessage response = await client.PostAsync(usersURI, content, tokenSource.Token);
 
-                    // Tell the user if there are any problems with their input.
-                    // TODO This doesn't actually work for some reason. Fix it.
+                    // Tell the user if they're already in a game, so they can't start a new game!
                     if (!response.IsSuccessStatusCode)
                     {
-                        throw new Exception("Either you're already in a game, or you haven't registered with the server!");
+                        view.ShowMessage("You're already in a game!");
+                        return;
                     }
                     // Otherwise, parse the input from the server.
                     string responseBodyAsString = await response.Content.ReadAsStringAsync();
-                    dynamic responseBodyAsObject = JsonConvert.DeserializeObject(responseBodyAsString);
-                    GameID = responseBodyAsObject["GameID"];
+                    JoinGameResponse responseBody = JsonConvert.DeserializeObject<JoinGameResponse>(responseBodyAsString);
+                    GameID = responseBody.GameID;
                 }
             }
             catch (Exception e)
             {
-                if (!(e is TaskCanceledException))
+                if (e is TaskCanceledException)
                 {
-                    view.ShowErrorMessage("A server side error has occurred. Please try again.");
+                    view.ShowMessage("Game canceled.");
+                    HandleCancelGame();
                 }
             }
             finally
             {
                 //view.EnableControlsJoin(true);
-            }
-        }
-
-        private async void PlayWord(string word)
-        {
-            if (!InAGame)
-            {
-                return;
-            }
-            try
-            {
-                using (HttpClient client = CreateClient(DesiredServer))
-                {
-                    tokenSource = new CancellationTokenSource();
-                    //view.EnableControlsJoin(false);  //Stuff from Joe's Controller3
-                    // Create a dynamic object that will be serialized.
-                    dynamic body = new ExpandoObject();
-                    body.UserToken = UserToken;
-                    body.Word = word;
-
-                    // Serialize the body and create the URI
-                    StringContent content = new StringContent(JsonConvert.SerializeObject(body), Encoding.UTF8, "application/json");
-                    string gamesURI = DesiredServer + "/BoggleService/games/" + GameID;
-                    HttpResponseMessage response = await client.PutAsync(gamesURI, content, tokenSource.Token);
-                    string score = await response.Content.ReadAsStringAsync();
-                    // Tell the user if there are any problems with their input.
-                    if (response.StatusCode.Equals(403))
-                    {
-                        throw new Exception("The Word is null, empty, or longer than 30 characters OR gameID or UserToken is invalid OR if UserToken is not a player in the game identified by gameID.");
-                    }
-                    else if (response.StatusCode.Equals(409))
-                    {
-                        throw new Exception("Game is not Active!");
-                    }
-                    view.AddPlayedWord(word + "\t" + score);
-
-                }
-            }
-            catch (Exception e)
-            {
-                if (!(e is TaskCanceledException))
-                {
-                    view.ShowErrorMessage("A server side error has occurred. Please try again.");
-                }
-            }
-            finally
-            {
-                //view.EnableControls(false);  //Stuff from Joe's Controller3
-            }
-
-
-        }
-
-        private async void RegisterUser(string username)
-        {
-            DesiredServer = view.ObtainDesiredServer();
-            try
-            {
-                using (HttpClient client = CreateClient(DesiredServer))
-                {
-                    tokenSource = new CancellationTokenSource();
-                    view.EnableControlsRegister(false);
-                    StringContent content = new StringContent(JsonConvert.SerializeObject(username), Encoding.UTF8, "application/json");
-                    string usersURI = DesiredServer + "/BoggleService/users";
-                    HttpResponseMessage response = await client.PostAsync(usersURI, content, tokenSource.Token);
-                    if (username.Equals("") || username.Equals("@"))
-                    {
-                        throw new ArgumentNullException("You've given an invalid name!");
-                    }
-                    if (response.StatusCode.Equals(403))
-                    {
-                        throw new Exception("You've given an invalid name!");
-                    }
-                    username = await response.Content.ReadAsStringAsync();
-                    UserToken = (string)JsonConvert.DeserializeObject(username);
-                    view.EnableEnterGameButton(true);
-                }
-            }
-            catch (Exception e)
-            {
-                if (!(e is TaskCanceledException))
-                {
-                    view.ShowErrorMessage("A server side error occurred. Please try again.");
-                }
-            }
-            finally
-            {
-                view.EnableControlsRegister(true);
             }
         }
 
@@ -325,6 +380,9 @@ namespace PS9
             {
                 using (HttpClient client = CreateClient(DesiredServer))
                 {
+                    // TODO: Ensure that the controls are properly updating before the server query in BoggleClientController.StartGame().
+                    // TODO: Ensure that the controls are properly updating before the server query in BoggleClientController.StartGame().
+
                     tokenSource = new CancellationTokenSource();
                     dynamic body = new ExpandoObject();
                     body.GameID = GameID;
@@ -334,25 +392,23 @@ namespace PS9
                     // Parse the server's response.
                     HttpResponseMessage response = await client.GetAsync(gamesURI, tokenSource.Token);
                     string responseAsString = await response.Content.ReadAsStringAsync();
-                    dynamic responseAsObject = JsonConvert.DeserializeObject(responseAsString);
-                    if (responseAsObject["GameState"].ToString().Equals("pending"))
+                    GetGameStatus responseBody = JsonConvert.DeserializeObject<GetGameStatus>(responseAsString);
+                    if (responseBody.GameState.Equals("pending"))
                     {
                         await CheckGameStatus();
                     }
                     // Requery the server for the new information.
                     response = await client.GetAsync(gamesURI, tokenSource.Token);
                     responseAsString = await response.Content.ReadAsStringAsync();
-                    responseAsObject = JsonConvert.DeserializeObject(responseAsString);
+                    responseBody = JsonConvert.DeserializeObject<GetGameStatus>(responseAsString);
 
                     // Parse all the returned things.
-                    Board = responseAsObject["Board"].ToString();
-                    view.SetTimeLimit(responseAsObject["TimeLimit"].ToString());
+                    Board = responseBody.Board;
+                    view.SetTimeLimit(responseBody.TimeLimit);
                     view.SetUpBoard(Board.ToString());
                     view.EnableTimer(true);
-                    dynamic player1 = JsonConvert.DeserializeObject(responseAsObject["Player1"].ToString());
-                    dynamic player2 = JsonConvert.DeserializeObject(responseAsObject["Player2"].ToString());
 
-                    ArePlayerOne = player1["Nickname"].ToString().Equals(Nickname);
+                    ArePlayerOne = responseBody.Player1.Nickname.Equals(UserNickname);
                     InAGame = true;
                 }
             }
@@ -360,11 +416,12 @@ namespace PS9
             {
                 if (!(e is TaskCanceledException))
                 {
-                    view.ShowErrorMessage("A server side error has occurred. Please try again.");
+                    view.ShowMessage("A server side error has occurred. Please try again.");
                 }
             }
             finally
             {
+                // TODO: Ensure that the controls are properly updating after starting the game.
                 view.EnableControlsInGame(true);
             }
         }
@@ -385,81 +442,40 @@ namespace PS9
                     // Query the server
                     HttpResponseMessage response = await client.GetAsync(gamesURI, tokenSource.Token);
                     string responseAsString = await response.Content.ReadAsStringAsync();
-                    GetGameResponse responseAsObject = JsonConvert.DeserializeObject<GetGameResponse>(responseAsString);
+                    GetGameStatus responseBody = JsonConvert.DeserializeObject<GetGameStatus>(responseAsString);
 
-                    if (responseAsObject.GameState.Equals("completed"))
+                    // If the game is completed, finish up the game
+                    if (responseBody.GameState.Equals("completed"))
                     {
-                        FinishGame();
+                        FinishGame(responseBody);
                         return;
                     }
 
-                    view.SetRemainingTime(responseAsObject.TimeLeft);
-                    
+                    view.SetRemainingTime(responseBody.TimeLeft);
+
                     if (ArePlayerOne)
                     {
-                        view.SetPlayerScore(responseAsObject.Player1.Score.ToString());
-                        view.SetOpponentScore(responseAsObject.Player2.Score.ToString());
-                        view.SetOpponentNickname(responseAsObject.Player2.Nickname);
+                        view.SetPlayerScore(responseBody.Player1.Score.ToString());
+                        view.SetOpponentScore(responseBody.Player2.Score.ToString());
+                        view.SetOpponentNickname(responseBody.Player2.Nickname);
                     }
                     else
                     {
-                        view.SetPlayerScore(responseAsObject.Player2.Score.ToString());
-                        view.SetOpponentScore(responseAsObject.Player1.Score.ToString());
-                        view.SetOpponentNickname(responseAsObject.Player1.Nickname);
+                        view.SetPlayerScore(responseBody.Player2.Score.ToString());
+                        view.SetOpponentScore(responseBody.Player1.Score.ToString());
+                        view.SetOpponentNickname(responseBody.Player1.Nickname);
                     }
-
-
-
                 }
             }
             catch (Exception e)
             {
                 if (!(e is TaskCanceledException))
                 {
-                    view.ShowErrorMessage("A server side error has occurred. Please try again.");
+                    view.ShowMessage("A server side error has occurred. Please try again.");
                 }
             }
         }
 
-        private async void FinishGame()
-        {
-            try
-            {
-                using (HttpClient client = CreateClient(DesiredServer))
-                {
-                    // Setup the stuff necessary to query the server.
-                    tokenSource = new CancellationTokenSource();
-                    dynamic body = new ExpandoObject();
-                    body.GameID = GameID;
-                    StringContent content = new StringContent(JsonConvert.SerializeObject(body), Encoding.UTF8, "application/json");
-                    string gamesURI = DesiredServer + "/BoggleService/games/" + GameID + "/false";
-                    // Check the server every second until the game is completed.
-                    // Query the server
-                    HttpResponseMessage response = await client.GetAsync(gamesURI, tokenSource.Token);
-                    string responseAsString = await response.Content.ReadAsStringAsync();
-                    GetGameResponse responseAsObject = JsonConvert.DeserializeObject<GetGameResponse>(responseAsString);
-                    Player player1 = responseAsObject.Player1;
-                    Player player2 = responseAsObject.Player2;
-                    view.EnableControlsInGame(true);
-
-                    gr = new GameResults();
-                    gr.ChangeLabels(player1.Nickname, player2.Nickname, player1.Score.ToString(), player2.Score.ToString(), player1.WordsPlayed, player2.WordsPlayed);
-                    view.EnableTimer(false);
-                    gr.Show();
-
-                }
-            }
-            catch (Exception e)
-            {
-                view.ShowErrorMessage(e.ToString());
-            }
-            finally
-            {
-                InAGame = false;
-                view.Reset();
-                
-            }
-
-        }
+        #endregion Private Methods
     }
 }

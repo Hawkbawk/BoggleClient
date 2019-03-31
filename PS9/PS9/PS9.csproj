@@ -57,7 +57,10 @@
     </Compile>
     <Compile Include="BoggleClientContext.cs" />
     <Compile Include="BoggleClientController.cs" />
-    <Compile Include="ClassList.cs" />
+    <Compile Include="Models\JoinGameResponse.cs" />
+    <Compile Include="Models\WordAndScore.cs" />
+    <Compile Include="Models\Player.cs" />
+    <Compile Include="Models\GetGameStatus.cs" />
     <Compile Include="GameResults.cs">
       <SubType>Form</SubType>
     </Compile>
