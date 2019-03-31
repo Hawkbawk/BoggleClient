@@ -4,12 +4,22 @@ namespace PS9
 {
     internal class BoggleClientContext : ApplicationContext
     {
+        #region Private Fields
+
         private static BoggleClientContext context;
         private int windowCount;
+
+        #endregion Private Fields
+
+        #region Private Constructors
 
         private BoggleClientContext()
         {
         }
+
+        #endregion Private Constructors
+
+        #region Public Methods
 
         public static BoggleClientContext GetContext()
         {
@@ -29,5 +39,7 @@ namespace PS9
             view.FormClosed += (o, e) => { if (--windowCount <= 0) ExitThread(); };
             view.Show();
         }
+
+        #endregion Public Methods
     }
 }

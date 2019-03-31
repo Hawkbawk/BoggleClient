@@ -5,49 +5,57 @@ namespace PS9
 {
     internal interface IBoggleService
     {
-        event Action EnterGame;
-
-        event Action RegisterUser;
-
-        event Action CancelRegister;
+        #region Public Events
 
         event Action CancelGame;
 
+        event Action CancelRegister;
+
+        event Action EnterGame;
+
+        event Action RegisterUser;
         event Action<string> SubmitWord;
 
         event Action UpdateProperties;
 
-        string GetUsername();
+        #endregion Public Events
 
-        string GetDesiredServer();
-
-        void SetTimeLimit(string timeLimit);
-
-        int GetDesiredTime();
-
-        void SetRemainingTime(string remainingTime);
-
-        void SetPlayerScore(string score);
-
-        void SetOpponentScore(string oppScore);
+        #region Public Methods
 
         void AddPlayedWord(string word);
 
-        void ShowMessage(string errorMsg);
-
-        void SetUpBoard(string boardContents);
-
-        void SetOpponentNickname(string nickname);
+        void DisplayFinalScore(string P1_Name, string P2_Name, string P1_Score, string P2_Score, WordAndScore[] P1_Words, WordAndScore[] P2_Words);
 
         void EnableTimer(bool state);
 
-        void SetUpControlsAfterRegister();
-        void SetUpControlsWhileRegister();
-        void SetUpControlsInGame();
-        void SetUpControlsWhileWaitingForGame();
+        string GetDesiredServer();
 
+        int GetDesiredTime();
+
+        string GetUsername();
         void Reset();
 
-        void DisplayFinalScore(string P1_Name, string P2_Name, string P1_Score, string P2_Score, WordAndScore[] P1_Words, WordAndScore[] P2_Words);
+        void SetOpponentNickname(string nickname);
+
+        void SetOpponentScore(string oppScore);
+
+        void SetPlayerScore(string score);
+
+        void SetRemainingTime(string remainingTime);
+
+        void SetTimeLimit(string timeLimit);
+        void SetUpBoard(string boardContents);
+
+        void SetUpControlsAfterRegister();
+
+        void SetUpControlsInGame();
+
+        void SetUpControlsWhileRegister();
+
+        void SetUpControlsWhileWaitingForGame();
+
+        void ShowMessage(string errorMsg);
+
+        #endregion Public Methods
     }
 }

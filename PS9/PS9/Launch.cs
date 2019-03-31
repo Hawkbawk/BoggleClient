@@ -5,6 +5,8 @@ namespace PS9
 {
     internal static class Launch
     {
+        #region Private Methods
+
         /// <summary>
         /// The main entry point for the application.
         /// </summary>
@@ -18,5 +20,7 @@ namespace PS9
 
             Application.Run(context);
         }
+
+        #endregion Private Methods
     }
 }
