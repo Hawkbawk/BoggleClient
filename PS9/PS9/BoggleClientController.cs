@@ -189,42 +189,32 @@ namespace PS9
                     // TODO: Ensure that the controls are properly updating before querying the server to in the BoggleClientController.CancelGame method.
 
                     // Setup the stuff for querying the server
-                    StringContent content = new StringContent(JsonConvert.SerializeObject(UserToken), Encoding.UTF8, "application/json");
-                    string gamesURI = DesiredServer + "/BoggleService/games";
-                    // Do a PUT request to tell the server we want to cancel our game.
-                    HttpResponseMessage response = await client.PutAsync(gamesURI, content);
-                    // Catch any errors from the server's response.
-                    if (response.StatusCode == HttpStatusCode.Forbidden)
+                    StringContent content;
+                    string gamesURI;
+                    HttpResponseMessage response;
+                    if (!InAGame)
                     {
-                        //view.ShowMessage("You're not currently in a pending " +
-                        //    "game. You probably shouldn't even be able to hit that button. Oops :)");
-                        //return;
-                    }
-
-                    // Change our URI so we can get the status of our game.
-                    gamesURI += "/" + GameID + "/false";
-
-                    // Query the server about our game.
-                    response = await client.GetAsync(gamesURI);
-
-                    // Deserialize the server's response.
-                    string responseAsString = await response.Content.ReadAsStringAsync();
-                    GetGameStatus responseBody = JsonConvert.DeserializeObject<GetGameStatus>(responseAsString);
-
-                    // Reset the board for a canceled pending game
-                    if (responseBody.GameState.Equals("pending"))
-                    {
-                        // TODO: Reset the board for a pending game being canceled.
+                        content = new StringContent(JsonConvert.SerializeObject(UserToken), Encoding.UTF8, "application/json");
+                        gamesURI = DesiredServer + "/BoggleService/games";
+                        // Do a PUT request to tell the server we want to cancel our game.
+                        response = await client.PutAsync(gamesURI, content);
                         view.SetUpControlsAfterRegister();
                         view.EnableTimer(false);
                         InAGame = false;
-                        tokenSource.Cancel();
+                        if (tokenSource.Token.CanBeCanceled)
+                        {
+                            tokenSource.Cancel();
+                        }
                     }
-                    // Or reset the board for a canceled active/completed game, although you shouldn't technically .
                     else
                     {
-                        tokenSource.Cancel();
-                        FinishGame(responseBody);
+                        view.SetUpControlsAfterRegister();
+                        view.EnableTimer(false);
+                        InAGame = false;
+                        if (tokenSource.Token.CanBeCanceled)
+                        {
+                            tokenSource.Cancel();
+                        }
                     }
                 }
             }
