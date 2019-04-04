@@ -161,6 +161,7 @@ namespace PS9
             Player player1 = responseBody.Player1;
             Player player2 = responseBody.Player2;
             view.Reset();
+            view.SetUpControlsAfterRegister();
             InAGame = false;
             if (player1.WordsPlayed == null)
             {
@@ -208,6 +209,7 @@ namespace PS9
                     }
                     else
                     {
+                        view.Reset();
                         view.SetUpControlsAfterRegister();
                         view.EnableTimer(false);
                         InAGame = false;
